@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía CSS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f4ff; padding: 30px; }
+        section { background: white; border-radius: 10px; padding: 20px; margin-bottom: 25px; border-left: 5px solid #007bff; }
+        h1 { text-align: center; margin-bottom: 30px; color: #007bff; }
+        h2 { color: #007bff; margin-bottom: 10px; }
+        h3 { color: #333; margin: 12px 0 5px; }
+        p  { color: #555; margin-bottom: 8px; line-height: 1.6; }
+        pre { background: #1e1e1e; color: #dcdcdc; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-size: 14px; }
+        .resultado { background: #f0f4ff; border: 2px dashed #007bff; border-radius: 8px; padding: 15px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>🎨 Guía Completa de CSS</h1>
+
+<!-- ============================================================
+     1. CÓMO CONECTAR CSS
+============================================================ -->
+<section>
+    <h2>1. Cómo conectar CSS al HTML</h2>
+    <p>Hay 3 formas. La mejor es un archivo separado.</p>
+    <pre>
+&lt;!-- FORMA 1: Archivo separado (recomendada) --&gt;
+&lt;link rel="stylesheet" href="estilos.css"&gt;
+&lt;!-- va en el &lt;head&gt; del HTML --&gt;
+
+&lt;!-- FORMA 2: Dentro del HTML con &lt;style&gt; --&gt;
+&lt;style&gt;
+    p { color: red; }
+&lt;/style&gt;
+
+&lt;!-- FORMA 3: Directo en el elemento (evitar, difícil de mantener) --&gt;
+&lt;p style="color: red;"&gt;Texto rojo&lt;/p&gt;</pre>
+</section>
+
+<!-- ============================================================
+     2. SELECTORES
+============================================================ -->
+<section>
+    <h2>2. Selectores - a quién le aplica el estilo</h2>
+    <pre>
+/* Por etiqueta: aplica a TODOS los &lt;p&gt; */
+p { color: gray; }
+
+/* Por clase: aplica a todo lo que tenga class="tarjeta" */
+.tarjeta { background: blue; }
+
+/* Por id: aplica solo al elemento con id="cabecera" */
+#cabecera { font-size: 32px; }
+
+/* Varios a la vez */
+h1, h2, h3 { color: navy; }
+
+/* Hijo directo: solo los &lt;p&gt; que están dentro de .contenedor */
+.contenedor > p { color: red; }
+
+/* Descendiente: todos los &lt;p&gt; dentro de .contenedor (a cualquier nivel) */
+.contenedor p { color: red; }
+
+/* Al pasar el mouse */
+.boton:hover { background: darkblue; }
+
+/* Al hacer click */
+.boton:active { background: black; }
+
+/* Cuando un input está seleccionado */
+input:focus { border-color: blue; }</pre>
+</section>
+
+<!-- ============================================================
+     3. COLORES
+============================================================ -->
+<section>
+    <h2>3. Colores</h2>
+    <pre>
+color: red;                  /* nombre en inglés */
+color: #007bff;              /* hexadecimal (el más usado) */
+color: rgb(0, 123, 255);     /* rojo, verde, azul (0-255) */
+color: rgba(0, 123, 255, 0.5); /* igual pero con transparencia (0-1) */
+
+background-color: #f5f5f5;   /* color de fondo */
+background-color: transparent; /* fondo transparente */</pre>
+    <div class="resultado" style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div style="background:#e74c3c; color:white; padding:10px; border-radius:6px;">#e74c3c</div>
+        <div style="background:#2ecc71; color:white; padding:10px; border-radius:6px;">#2ecc71</div>
+        <div style="background:#007bff; color:white; padding:10px; border-radius:6px;">#007bff</div>
+        <div style="background:#f39c12; color:white; padding:10px; border-radius:6px;">#f39c12</div>
+        <div style="background:#6c63ff; color:white; padding:10px; border-radius:6px;">#6c63ff</div>
+        <div style="background:rgba(0,123,255,0.3); padding:10px; border-radius:6px;">rgba transparente</div>
+    </div>
+</section>
+
+<!-- ============================================================
+     4. TEXTO
+============================================================ -->
+<section>
+    <h2>4. Propiedades de texto</h2>
+    <pre>
+color: #333;                  /* color del texto */
+font-size: 16px;              /* tamaño (px, em, rem, %) */
+font-weight: bold;            /* grosor: bold, normal, 100-900 */
+font-style: italic;           /* cursiva */
+font-family: Arial, sans-serif; /* fuente */
+text-align: center;           /* alineación: left, center, right, justify */
+text-decoration: none;        /* quita subrayado de enlaces */
+text-decoration: underline;   /* subrayado */
+text-transform: uppercase;    /* MAYÚSCULAS */
+text-transform: capitalize;   /* Primera Letra Mayúscula */
+line-height: 1.6;             /* espaciado entre líneas */
+letter-spacing: 2px;          /* espacio entre letras */</pre>
+    <div class="resultado">
+        <p style="font-size:20px; font-weight:bold;">font-size:20px font-weight:bold</p>
+        <p style="text-align:center; color:#007bff;">text-align:center</p>
+        <p style="text-transform:uppercase; letter-spacing:3px;">text-transform:uppercase letter-spacing:3px</p>
+        <p style="line-height:2.5;">line-height:2.5 — este texto tiene mucho espacio entre líneas para que veas la diferencia con el espaciado normal.</p>
+    </div>
+</section>
+
+<!-- ============================================================
+     5. MARGIN Y PADDING
+============================================================ -->
+<section>
+    <h2>5. Margin y Padding</h2>
+    <p><strong>margin</strong> = espacio AFUERA del elemento (lo aleja de otros elementos)</p>
+    <p><strong>padding</strong> = espacio ADENTRO del elemento (aleja el contenido del borde)</p>
+    <pre>
+/* Todos los lados iguales */
+margin: 20px;
+padding: 20px;
+
+/* Arriba/abajo  Izquierda/derecha */
+margin: 10px 20px;
+
+/* Arriba  Derecha  Abajo  Izquierda (sentido horario) */
+margin: 10px 20px 5px 15px;
+
+/* Lado específico */
+margin-top: 10px;
+margin-right: 20px;
+margin-bottom: 10px;
+margin-left: 20px;
+
+/* Centrar un elemento horizontalmente */
+margin: 0 auto;</pre>
+    <div class="resultado">
+        <div style="background:#ffeeba; border:2px dashed orange; padding:5px; margin:20px;">
+            margin:20px (espacio afuera) — padding:5px (espacio adentro)
+        </div>
+        <div style="background:#d4edda; border:2px dashed green; padding:30px; margin:5px;">
+            margin:5px — padding:30px (mucho espacio adentro)
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     6. BORDES
+============================================================ -->
+<section>
+    <h2>6. Bordes</h2>
+    <pre>
+border: 2px solid black;       /* grosor  estilo  color */
+border: 1px dashed gray;       /* punteado */
+border: 3px dotted red;        /* puntos */
+
+border-top: 2px solid blue;    /* solo arriba */
+border-radius: 10px;           /* esquinas redondeadas */
+border-radius: 50%;            /* círculo perfecto (si width = height) */
+
+box-shadow: 2px 2px 8px gray;  /* sombra: x  y  difuminado  color */
+box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* sombra suave */</pre>
+    <div class="resultado" style="display:flex; gap:15px; flex-wrap:wrap;">
+        <div style="border:2px solid black; padding:10px; border-radius:4px;">solid</div>
+        <div style="border:2px dashed gray; padding:10px; border-radius:4px;">dashed</div>
+        <div style="border:2px dotted red; padding:10px; border-radius:4px;">dotted</div>
+        <div style="border:2px solid #007bff; padding:10px; border-radius:20px;">border-radius:20px</div>
+        <div style="width:60px; height:60px; background:#007bff; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;">50%</div>
+        <div style="border:1px solid #ccc; padding:10px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.2);">box-shadow</div>
+    </div>
+</section>
+
+<!-- ============================================================
+     7. WIDTH Y HEIGHT
+============================================================ -->
+<section>
+    <h2>7. Width y Height - tamaño</h2>
+    <pre>
+width: 200px;          /* ancho fijo en píxeles */
+width: 50%;            /* 50% del ancho del elemento padre */
+width: 100%;           /* ocupa todo el ancho disponible */
+max-width: 600px;      /* ancho máximo (no crece más de esto) */
+min-width: 200px;      /* ancho mínimo (no se achica más de esto) */
+
+height: 100px;         /* alto fijo */
+height: auto;          /* se ajusta al contenido (por defecto) */
+min-height: 200px;     /* alto mínimo */</pre>
+</section>
+
+<!-- ============================================================
+     8. DISPLAY
+============================================================ -->
+<section>
+    <h2>8. Display - cómo se comporta el elemento</h2>
+    <pre>
+display: block;    /* ocupa toda la línea (div, p, h1 son block por defecto) */
+display: inline;   /* va en línea con el texto (span, a son inline por defecto) */
+display: inline-block; /* en línea pero acepta width y height */
+display: none;     /* oculta el elemento completamente */
+display: flex;     /* activa flexbox (organiza hijos en fila) */
+display: grid;     /* activa grid (organiza en cuadrícula) */</pre>
+    <div class="resultado">
+        <span style="display:inline-block; background:#007bff; color:white; padding:8px 15px; border-radius:6px; margin:4px;">inline-block 1</span>
+        <span style="display:inline-block; background:#e74c3c; color:white; padding:8px 15px; border-radius:6px; margin:4px;">inline-block 2</span>
+        <span style="display:inline-block; background:#2ecc71; color:white; padding:8px 15px; border-radius:6px; margin:4px;">inline-block 3</span>
+    </div>
+</section>
+
+<!-- ============================================================
+     9. FLEXBOX
+============================================================ -->
+<section>
+    <h2>9. Flexbox - organizar en fila o columna</h2>
+    <p>Se activa en el contenedor padre con <code>display: flex</code>. Los hijos se organizan automáticamente.</p>
+    <pre>
+.contenedor {
+    display: flex;                   /* activa flexbox */
+    flex-direction: row;             /* fila (por defecto) */
+    flex-direction: column;          /* columna */
+    justify-content: flex-start;     /* alinea al inicio (por defecto) */
+    justify-content: center;         /* centra horizontalmente */
+    justify-content: flex-end;       /* alinea al final */
+    justify-content: space-between;  /* espacio entre elementos */
+    justify-content: space-around;   /* espacio alrededor de elementos */
+    align-items: stretch;            /* estira los hijos (por defecto) */
+    align-items: center;             /* centra verticalmente */
+    align-items: flex-start;         /* alinea arriba */
+    gap: 20px;                       /* espacio entre elementos */
+    flex-wrap: wrap;                 /* si no caben, bajan a la siguiente línea */
+}</pre>
+    <div class="resultado">
+        <p style="margin-bottom:8px;">justify-content: space-between</p>
+        <div style="display:flex; justify-content:space-between; gap:10px;">
+            <div style="background:#007bff; color:white; padding:15px; border-radius:8px; flex:1; text-align:center;">1</div>
+            <div style="background:#007bff; color:white; padding:15px; border-radius:8px; flex:1; text-align:center;">2</div>
+            <div style="background:#007bff; color:white; padding:15px; border-radius:8px; flex:1; text-align:center;">3</div>
+        </div>
+        <p style="margin:10px 0 8px;">justify-content: center</p>
+        <div style="display:flex; justify-content:center; gap:10px;">
+            <div style="background:#6c63ff; color:white; padding:15px; border-radius:8px; width:80px; text-align:center;">1</div>
+            <div style="background:#6c63ff; color:white; padding:15px; border-radius:8px; width:80px; text-align:center;">2</div>
+            <div style="background:#6c63ff; color:white; padding:15px; border-radius:8px; width:80px; text-align:center;">3</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     10. GRID
+============================================================ -->
+<section>
+    <h2>10. Grid - organizar en cuadrícula</h2>
+    <pre>
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+    grid-template-columns: 200px 1fr 1fr;  /* primera fija, las otras iguales */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* responsive automático */
+    gap: 15px;                             /* espacio entre celdas */
+    grid-template-rows: 100px auto;        /* altura de filas */
+}
+
+/* 1fr = "1 fracción del espacio disponible" */
+/* repeat(3, 1fr) = 3 columnas del mismo tamaño */</pre>
+    <div class="resultado">
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+            <div style="background:#6c63ff; color:white; padding:20px; border-radius:8px; text-align:center;">1</div>
+            <div style="background:#6c63ff; color:white; padding:20px; border-radius:8px; text-align:center;">2</div>
+            <div style="background:#6c63ff; color:white; padding:20px; border-radius:8px; text-align:center;">3</div>
+            <div style="background:#6c63ff; color:white; padding:20px; border-radius:8px; text-align:center;">4</div>
+            <div style="background:#6c63ff; color:white; padding:20px; border-radius:8px; text-align:center;">5</div>
+            <div style="background:#6c63ff; color:white; padding:20px; border-radius:8px; text-align:center;">6</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     11. POSITION
+============================================================ -->
+<section>
+    <h2>11. Position - mover elementos libremente</h2>
+    <pre>
+position: static;    /* por defecto, flujo normal */
+
+position: relative;  /* se mueve RELATIVO a donde estaba */
+top: 10px;           /* baja 10px desde su posición original */
+left: 20px;          /* se mueve 20px a la derecha */
+
+position: absolute;  /* se mueve RELATIVO al padre con position:relative */
+top: 0;              /* pegado arriba del padre */
+right: 0;            /* pegado a la derecha del padre */
+
+position: fixed;     /* se queda fijo en pantalla aunque hagas scroll */
+top: 0;              /* pegado arriba de la pantalla (navbar fijo) */
+
+position: sticky;    /* normal hasta que llegas a él, luego se queda fijo */
+top: 0;</pre>
+    <div class="resultado">
+        <div style="position:relative; background:#eee; height:100px; border-radius:8px;">
+            <p style="padding:10px;">Padre con position:relative</p>
+            <div style="position:absolute; top:10px; right:10px; background:#e74c3c; color:white; padding:8px 12px; border-radius:6px;">
+                absolute top:10 right:10
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     12. HOVER Y TRANSICIONES
+============================================================ -->
+<section>
+    <h2>12. Hover y transiciones</h2>
+    <style>
+        .btn-hover {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease; /* hace el cambio suave */
+        }
+        .btn-hover:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+    <pre>
+.boton {
+    background: #007bff;
+    transition: all 0.3s ease; /* propiedad  duración  tipo */
+}
+.boton:hover {
+    background: darkblue;      /* cambia al pasar el mouse */
+    transform: scale(1.05);    /* crece un poco */
+}
+
+/* Tipos de transición */
+ease        /* lento-rápido-lento (por defecto) */
+linear      /* velocidad constante */
+ease-in     /* empieza lento */
+ease-out    /* termina lento */</pre>
+    <div class="resultado">
+        <button class="btn-hover">Pasa el mouse aquí</button>
+    </div>
+</section>
+
+<!-- ============================================================
+     13. TRANSFORM
+============================================================ -->
+<section>
+    <h2>13. Transform - rotar, escalar, mover</h2>
+    <style>
+        .t { width:70px; height:70px; background:#6c63ff; color:white; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:11px; text-align:center; }
+    </style>
+    <pre>
+transform: rotate(45deg);           /* rota */
+transform: scale(1.5);              /* agranda (1=normal, 2=doble) */
+transform: scaleX(1.5);             /* solo horizontal */
+transform: translateX(50px);        /* mueve a la derecha */
+transform: translateY(50px);        /* mueve hacia abajo */
+transform: translate(20px, -10px);  /* mueve en X e Y */
+transform: skewX(15deg);            /* sesga */
+
+/* Se pueden combinar */
+transform: rotate(45deg) scale(1.2) translateX(10px);</pre>
+    <div class="resultado" style="display:flex; gap:25px; flex-wrap:wrap; align-items:center; padding:20px;">
+        <div><p style="font-size:11px; margin-bottom:5px;">normal</p><div class="t">normal</div></div>
+        <div><p style="font-size:11px; margin-bottom:5px;">rotate(30deg)</p><div class="t" style="transform:rotate(30deg);">rotate</div></div>
+        <div><p style="font-size:11px; margin-bottom:5px;">scale(1.3)</p><div class="t" style="transform:scale(1.3);">scale</div></div>
+        <div><p style="font-size:11px; margin-bottom:5px;">translateX(20px)</p><div class="t" style="transform:translateX(20px);">translate</div></div>
+        <div><p style="font-size:11px; margin-bottom:5px;">skewX(15deg)</p><div class="t" style="transform:skewX(15deg);">skew</div></div>
+    </div>
+</section>
+
+<!-- ============================================================
+     14. ANIMACIONES
+============================================================ -->
+<section>
+    <h2>14. Animaciones con @keyframes</h2>
+    <style>
+        @keyframes pulsar {
+            0%   { transform: scale(1);    background: #007bff; }
+            50%  { transform: scale(1.2);  background: #6c63ff; }
+            100% { transform: scale(1);    background: #007bff; }
+        }
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .demo-pulsar  { width:80px; height:80px; border-radius:50%; animation: pulsar 1.5s ease infinite; }
+        .demo-aparecer { background:#2ecc71; color:white; padding:15px; border-radius:8px; animation: aparecer 1s ease forwards; }
+    </style>
+    <pre>
+@keyframes nombre {
+    from { opacity: 0; }          /* estado inicial */
+    to   { opacity: 1; }          /* estado final */
+}
+
+@keyframes nombre {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
+
+.elemento {
+    animation: nombre duración tipo repetición;
+    animation: pulsar 1s ease infinite;    /* infinito */
+    animation: aparecer 0.5s ease forwards; /* forwards = se queda en el estado final */
+}</pre>
+    <div class="resultado" style="display:flex; gap:20px; align-items:center;">
+        <div class="demo-pulsar"></div>
+        <div class="demo-aparecer">Aparece con animación</div>
+    </div>
+</section>
+
+<!-- ============================================================
+     15. RESPONSIVE CON MEDIA QUERIES
+============================================================ -->
+<section>
+    <h2>15. Responsive - adaptarse al tamaño de pantalla</h2>
+    <pre>
+/* Estilos base (pantalla grande) */
+.contenedor {
+    display: flex;
+    gap: 20px;
+}
+
+/* Tablet (menor a 768px) */
+@media (max-width: 768px) {
+    .contenedor {
+        flex-direction: column;
+    }
+}
+
+/* Celular (menor a 480px) */
+@media (max-width: 480px) {
+    .contenedor {
+        padding: 10px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+}
+
+/* Tamaños de referencia */
+/* max-width: 480px  -> celular pequeño  */
+/* max-width: 768px  -> tablet           */
+/* max-width: 1024px -> laptop           */</pre>
+</section>
+
+<!-- ============================================================
+     16. VARIABLES CSS
+============================================================ -->
+<section>
+    <h2>16. Variables CSS - reutilizar valores</h2>
+    <style>
+        :root {
+            --azul: #007bff;
+            --verde: #2ecc71;
+            --radio: 10px;
+            --sombra: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .demo-var1 { background: var(--azul); color:white; padding:12px; border-radius:var(--radio); margin:5px 0; box-shadow:var(--sombra); }
+        .demo-var2 { background: var(--verde); color:white; padding:12px; border-radius:var(--radio); margin:5px 0; box-shadow:var(--sombra); }
+    </style>
+    <pre>
+/* Se definen en :root para que estén disponibles en toda la página */
+:root {
+    --color-principal: #007bff;
+    --color-secundario: #2ecc71;
+    --fuente-grande: 24px;
+    --radio: 10px;
+    --sombra: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+/* Se usan con var() */
+.boton {
+    background: var(--color-principal);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+/* Ventaja: cambias el valor en :root y cambia en todos lados */</pre>
+    <div class="resultado">
+        <div class="demo-var1">Usa var(--azul) y var(--radio)</div>
+        <div class="demo-var2">Usa var(--verde) y var(--sombra)</div>
+    </div>
+</section>
+
+<!-- ============================================================
+     17. PSEUDOCLASES
+============================================================ -->
+<section>
+    <h2>17. Pseudoclases - seleccionar elementos específicos</h2>
+    <style>
+        .lista-p li:first-child  { color: #e74c3c; font-weight: bold; }
+        .lista-p li:last-child   { color: #2ecc71; font-weight: bold; }
+        .lista-p li:nth-child(2) { color: #007bff; }
+        .lista-p li:nth-child(odd) { background: #f0f4ff; }
+    </style>
+    <pre>
+li:first-child      { color: red; }     /* primer elemento */
+li:last-child       { color: green; }   /* último elemento */
+li:nth-child(2)     { color: blue; }    /* el segundo exacto */
+li:nth-child(odd)   { background: #eee; } /* impares: 1,3,5... */
+li:nth-child(even)  { background: #fff; } /* pares: 2,4,6... */
+
+a:visited           { color: purple; }  /* enlace ya visitado */
+input:disabled      { opacity: 0.5; }   /* input desactivado */
+input:checked       { }                 /* checkbox marcado */</pre>
+    <div class="resultado">
+        <ul class="lista-p" style="padding-left:20px;">
+            <li style="padding:4px;">Primero (rojo)</li>
+            <li style="padding:4px;">Segundo (azul)</li>
+            <li style="padding:4px;">Tercero (fondo azul claro)</li>
+            <li style="padding:4px;">Último (verde)</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ============================================================
+     18. OVERFLOW
+============================================================ -->
+<section>
+    <h2>18. Overflow - controlar contenido que se sale</h2>
+    <pre>
+overflow: visible;  /* por defecto, el contenido se sale */
+overflow: hidden;   /* oculta lo que se sale */
+overflow: scroll;   /* siempre muestra barra de scroll */
+overflow: auto;     /* scroll solo si es necesario (el más usado) */
+
+overflow-x: hidden; /* solo controla el horizontal */
+overflow-y: auto;   /* solo controla el vertical */</pre>
+    <div class="resultado">
+        <div style="width:200px; height:80px; background:#eee; border:2px solid #ccc; border-radius:8px; overflow:auto; padding:10px;">
+            Este texto es muy largo y se sale del contenedor, pero overflow:auto agrega scroll automáticamente para que puedas verlo todo.
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía HTML</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 30px; }
+        section { background: white; border-radius: 10px; padding: 20px; margin-bottom: 25px; border-left: 5px solid #e67e22; }
+        h1 { text-align: center; margin-bottom: 30px; color: #e67e22; }
+        h2 { color: #e67e22; margin-bottom: 10px; }
+        h3 { color: #333; margin: 12px 0 5px; }
+        p  { color: #555; margin-bottom: 8px; line-height: 1.6; }
+        pre { background: #1e1e1e; color: #dcdcdc; padding: 15px; border-radius: 8px; overflow-x: auto; margin-top: 10px; font-size: 14px; }
+        .resultado { background: #fff8f0; border: 2px dashed #e67e22; border-radius: 8px; padding: 15px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>📄 Guía Completa de HTML</h1>
+
+<!-- ============================================================
+     1. ESTRUCTURA BASE
+============================================================ -->
+<section>
+    <h2>1. Estructura base</h2>
+    <p>Todo archivo HTML empieza con esta estructura. Sin esto, el navegador no sabe qué hacer.</p>
+    <pre>
+&lt;!DOCTYPE html&gt;          &lt;!-- le dice al navegador que es HTML5 --&gt;
+&lt;html lang="es"&gt;         &lt;!-- etiqueta raíz, todo va adentro --&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;    &lt;!-- permite tildes y ñ --&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;!-- viewport hace que se vea bien en celular --&gt;
+    &lt;title&gt;Título de la pestaña&lt;/title&gt;
+    &lt;link rel="stylesheet" href="estilos.css"&gt;  &lt;!-- conecta el CSS --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- todo lo visible va aquí --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    <p>Regla: todo lo que el usuario ve va en <strong>&lt;body&gt;</strong>. Todo lo de configuración va en <strong>&lt;head&gt;</strong>.</p>
+</section>
+
+<!-- ============================================================
+     2. TÍTULOS
+============================================================ -->
+<section>
+    <h2>2. Títulos h1 - h6</h2>
+    <p>Hay 6 niveles. h1 es el más grande y solo debe haber uno por página. Los demás se usan para secciones y subsecciones.</p>
+    <pre>
+&lt;h1&gt;Título principal&lt;/h1&gt;    &lt;!-- el más grande, solo uno por página --&gt;
+&lt;h2&gt;Sección&lt;/h2&gt;             &lt;!-- subtítulo de sección --&gt;
+&lt;h3&gt;Subsección&lt;/h3&gt;          &lt;!-- subtítulo de subsección --&gt;
+&lt;h4&gt;Nivel 4&lt;/h4&gt;
+&lt;h5&gt;Nivel 5&lt;/h5&gt;
+&lt;h6&gt;Nivel 6 (el más pequeño)&lt;/h6&gt;</pre>
+    <div class="resultado">
+        <h1 style="font-size:28px;">h1 - Título principal</h1>
+        <h2 style="font-size:22px; color:#333;">h2 - Sección</h2>
+        <h3 style="font-size:18px; color:#333;">h3 - Subsección</h3>
+        <h4 style="color:#333;">h4</h4>
+        <h5 style="color:#333;">h5</h5>
+        <h6 style="color:#333;">h6</h6>
+    </div>
+</section>
+
+<!-- ============================================================
+     3. PÁRRAFO Y TEXTO
+============================================================ -->
+<section>
+    <h2>3. Párrafo y texto</h2>
+    <pre>
+&lt;p&gt;Esto es un párrafo.&lt;/p&gt;
+&lt;p&gt;Texto en &lt;strong&gt;negrita&lt;/strong&gt; y en &lt;em&gt;cursiva&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Texto &lt;u&gt;subrayado&lt;/u&gt; y texto &lt;s&gt;tachado&lt;/s&gt;.&lt;/p&gt;
+&lt;p&gt;Salto de&lt;br&gt;línea con br.&lt;/p&gt;
+&lt;span&gt;span no rompe la línea, va dentro de un párrafo&lt;/span&gt;
+&lt;hr&gt;  &lt;!-- línea horizontal separadora --&gt;</pre>
+    <div class="resultado">
+        <p>Esto es un párrafo.</p>
+        <p>Texto en <strong>negrita</strong> y en <em>cursiva</em>.</p>
+        <p>Texto <u>subrayado</u> y texto <s>tachado</s>.</p>
+        <p>Salto de<br>línea con br.</p>
+        <p>Texto normal con <span style="background:yellow;">span</span> en medio.</p>
+        <hr>
+    </div>
+</section>
+
+<!-- ============================================================
+     4. ENLACES
+============================================================ -->
+<section>
+    <h2>4. Enlaces &lt;a&gt;</h2>
+    <p>Sirven para navegar a otra página, sección o sitio web.</p>
+    <pre>
+&lt;a href="https://google.com"&gt;Ir a Google&lt;/a&gt;
+&lt;!-- href = la URL a donde va --&gt;
+
+&lt;a href="https://google.com" target="_blank"&gt;Abrir en pestaña nueva&lt;/a&gt;
+&lt;!-- target="_blank" = abre en pestaña nueva --&gt;
+
+&lt;a href="pagina2.html"&gt;Ir a otra página del mismo sitio&lt;/a&gt;
+&lt;!-- si el archivo está en la misma carpeta, solo pones el nombre --&gt;
+
+&lt;a href="#seccion"&gt;Ir a una sección de la misma página&lt;/a&gt;
+&lt;!-- el # apunta a un id en la misma página --&gt;
+
+&lt;a href="mailto:correo@ejemplo.com"&gt;Enviar correo&lt;/a&gt;
+&lt;!-- abre el cliente de correo --&gt;</pre>
+    <div class="resultado">
+        <a href="https://google.com" target="_blank">Abrir Google en pestaña nueva</a>
+    </div>
+</section>
+
+<!-- ============================================================
+     5. IMÁGENES
+============================================================ -->
+<section>
+    <h2>5. Imágenes &lt;img&gt;</h2>
+    <p>La etiqueta img no tiene cierre. src es obligatorio, alt también (buena práctica).</p>
+    <pre>
+&lt;img src="foto.jpg" alt="descripción"&gt;
+&lt;!-- src = ruta de la imagen --&gt;
+&lt;!-- alt = texto si la imagen no carga (importante para accesibilidad) --&gt;
+
+&lt;img src="foto.jpg" alt="foto" width="200"&gt;
+&lt;!-- width controla el ancho en píxeles --&gt;
+
+&lt;img src="foto.jpg" alt="foto" width="100%"&gt;
+&lt;!-- width 100% ocupa todo el ancho disponible --&gt;
+
+&lt;!-- Rutas --&gt;
+&lt;img src="foto.jpg"&gt;               &lt;!-- misma carpeta --&gt;
+&lt;img src="imagenes/foto.jpg"&gt;      &lt;!-- subcarpeta --&gt;
+&lt;img src="https://url/foto.jpg"&gt;   &lt;!-- imagen de internet --&gt;</pre>
+</section>
+
+<!-- ============================================================
+     6. LISTAS
+============================================================ -->
+<section>
+    <h2>6. Listas</h2>
+    <pre>
+&lt;!-- Lista sin orden (puntos) --&gt;
+&lt;ul&gt;
+    &lt;li&gt;Manzana&lt;/li&gt;
+    &lt;li&gt;Pera&lt;/li&gt;
+    &lt;li&gt;Uva&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Lista ordenada (números) --&gt;
+&lt;ol&gt;
+    &lt;li&gt;Primero&lt;/li&gt;
+    &lt;li&gt;Segundo&lt;/li&gt;
+    &lt;li&gt;Tercero&lt;/li&gt;
+&lt;/ol&gt;</pre>
+    <div class="resultado" style="display:flex; gap:40px;">
+        <div>
+            <p><strong>ul (puntos):</strong></p>
+            <ul><li>Manzana</li><li>Pera</li><li>Uva</li></ul>
+        </div>
+        <div>
+            <p><strong>ol (números):</strong></p>
+            <ol><li>Primero</li><li>Segundo</li><li>Tercero</li></ol>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     7. DIV Y SPAN
+============================================================ -->
+<section>
+    <h2>7. div y span</h2>
+    <p><strong>div</strong> = caja que ocupa toda la línea. Se usa para agrupar secciones.</p>
+    <p><strong>span</strong> = va dentro del texto sin romper la línea. Se usa para estilizar partes.</p>
+    <pre>
+&lt;div&gt;
+    &lt;!-- agrupa elementos, ocupa toda la línea --&gt;
+    &lt;p&gt;Párrafo dentro del div&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Texto con &lt;span style="color:red;"&gt;parte roja&lt;/span&gt; en medio.&lt;/p&gt;
+&lt;!-- span no rompe la línea --&gt;</pre>
+    <div class="resultado">
+        <div style="background:#ffeeba; padding:10px; border-radius:6px;">Esto es un div (ocupa toda la línea)</div>
+        <p style="margin-top:8px;">Texto con <span style="color:red; font-weight:bold;">parte roja</span> usando span.</p>
+    </div>
+</section>
+
+<!-- ============================================================
+     8. CLASS E ID
+============================================================ -->
+<section>
+    <h2>8. class e id</h2>
+    <p><strong>class</strong> se puede repetir en muchos elementos. Se usa para aplicar el mismo estilo a varios.</p>
+    <p><strong>id</strong> debe ser único. Se usa para identificar un elemento específico.</p>
+    <pre>
+&lt;!-- class: se puede repetir --&gt;
+&lt;div class="tarjeta"&gt;Tarjeta 1&lt;/div&gt;
+&lt;div class="tarjeta"&gt;Tarjeta 2&lt;/div&gt;
+
+&lt;!-- id: único en la página --&gt;
+&lt;h1 id="titulo-principal"&gt;Título&lt;/h1&gt;
+
+&lt;!-- un elemento puede tener varias clases --&gt;
+&lt;div class="tarjeta activa grande"&gt;...&lt;/div&gt;
+
+&lt;!-- En CSS:
+     .tarjeta  { }   &lt;-- punto para class
+     #titulo   { }   &lt;-- # para id
+--&gt;</pre>
+</section>
+
+<!-- ============================================================
+     9. FORMULARIOS
+============================================================ -->
+<section>
+    <h2>9. Formularios</h2>
+    <p>Se usan para recibir datos del usuario: texto, contraseñas, selecciones, etc.</p>
+    <pre>
+&lt;form&gt;
+    &lt;input type="text"     placeholder="Nombre"&gt;      &lt;!-- campo de texto --&gt;
+    &lt;input type="email"    placeholder="Correo"&gt;      &lt;!-- valida formato email --&gt;
+    &lt;input type="password" placeholder="Contraseña"&gt; &lt;!-- oculta lo que escribes --&gt;
+    &lt;input type="number"   placeholder="Edad"&gt;        &lt;!-- solo números --&gt;
+    &lt;input type="date"&gt;                               &lt;!-- selector de fecha --&gt;
+
+    &lt;select&gt;                                          &lt;!-- lista desplegable --&gt;
+        &lt;option&gt;Opción 1&lt;/option&gt;
+        &lt;option&gt;Opción 2&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;textarea rows="4" placeholder="Mensaje"&gt;&lt;/textarea&gt;  &lt;!-- área grande de texto --&gt;
+
+    &lt;label&gt;
+        &lt;input type="checkbox"&gt; Acepto términos        &lt;!-- casilla de verificación --&gt;
+    &lt;/label&gt;
+
+    &lt;input type="radio" name="genero" value="m"&gt; Masculino  &lt;!-- opción única --&gt;
+    &lt;input type="radio" name="genero" value="f"&gt; Femenino
+
+    &lt;button type="submit"&gt;Enviar&lt;/button&gt;             &lt;!-- botón de envío --&gt;
+    &lt;button type="button"&gt;Botón normal&lt;/button&gt;       &lt;!-- botón sin acción --&gt;
+&lt;/form&gt;</pre>
+    <div class="resultado">
+        <form style="display:flex; flex-direction:column; gap:8px; max-width:250px;">
+            <input type="text" placeholder="Nombre" style="padding:8px; border:1px solid #ccc; border-radius:6px;">
+            <input type="email" placeholder="Correo" style="padding:8px; border:1px solid #ccc; border-radius:6px;">
+            <select style="padding:8px; border:1px solid #ccc; border-radius:6px;">
+                <option>Opción 1</option><option>Opción 2</option>
+            </select>
+            <label><input type="checkbox"> Acepto términos</label>
+            <button style="padding:8px; background:#e67e22; color:white; border:none; border-radius:6px; cursor:pointer;">Enviar</button>
+        </form>
+    </div>
+</section>
+
+<!-- ============================================================
+     10. TABLAS
+============================================================ -->
+<section>
+    <h2>10. Tablas</h2>
+    <p>Para mostrar datos en filas y columnas.</p>
+    <pre>
+&lt;table&gt;
+    &lt;thead&gt;                          &lt;!-- cabecera de la tabla --&gt;
+        &lt;tr&gt;                         &lt;!-- tr = fila --&gt;
+            &lt;th&gt;Nombre&lt;/th&gt;          &lt;!-- th = celda de cabecera (negrita) --&gt;
+            &lt;th&gt;Edad&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;                          &lt;!-- cuerpo de la tabla --&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Kevin&lt;/td&gt;           &lt;!-- td = celda normal --&gt;
+            &lt;td&gt;25&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Luis&lt;/td&gt;
+            &lt;td&gt;19&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</pre>
+    <div class="resultado">
+        <table style="border-collapse:collapse; width:100%;">
+            <thead>
+                <tr style="background:#e67e22; color:white;">
+                    <th style="padding:8px; border:1px solid #ccc;">Nombre</th>
+                    <th style="padding:8px; border:1px solid #ccc;">Edad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="padding:8px; border:1px solid #ccc;">Kevin</td><td style="padding:8px; border:1px solid #ccc;">25</td></tr>
+                <tr style="background:#fff8f0;"><td style="padding:8px; border:1px solid #ccc;">Luis</td><td style="padding:8px; border:1px solid #ccc;">19</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ============================================================
+     11. ETIQUETAS SEMÁNTICAS
+============================================================ -->
+<section>
+    <h2>11. Etiquetas semánticas</h2>
+    <p>Son como div pero con nombre descriptivo. Le dicen al navegador qué tipo de contenido hay adentro.</p>
+    <pre>
+&lt;header&gt;  &lt;!-- cabecera de la página o sección --&gt;
+    &lt;h1&gt;Mi sitio&lt;/h1&gt;
+    &lt;nav&gt;                    &lt;!-- menú de navegación --&gt;
+        &lt;a href="#"&gt;Inicio&lt;/a&gt;
+        &lt;a href="#"&gt;Sobre mí&lt;/a&gt;
+    &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main&gt;                       &lt;!-- contenido principal --&gt;
+    &lt;section&gt;                &lt;!-- sección temática --&gt;
+        &lt;article&gt;            &lt;!-- contenido independiente (post, tarjeta) --&gt;
+            &lt;h2&gt;Título&lt;/h2&gt;
+            &lt;p&gt;Contenido...&lt;/p&gt;
+        &lt;/article&gt;
+    &lt;/section&gt;
+
+    &lt;aside&gt;                  &lt;!-- contenido secundario (barra lateral) --&gt;
+        &lt;p&gt;Publicidad o info extra&lt;/p&gt;
+    &lt;/aside&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;                     &lt;!-- pie de página --&gt;
+    &lt;p&gt;© 2025 Mi sitio&lt;/p&gt;
+&lt;/footer&gt;</pre>
+</section>
+
+<!-- ============================================================
+     12. COMENTARIOS
+============================================================ -->
+<section>
+    <h2>12. Comentarios</h2>
+    <p>No se ven en pantalla. Sirven para dejar notas en el código.</p>
+    <pre>
+&lt;!-- Esto es un comentario, no se ve en pantalla --&gt;
+
+&lt;!-- Puedes comentar varias líneas:
+     línea 1
+     línea 2
+--&gt;
+
+&lt;!-- También puedes "desactivar" código temporalmente:
+&lt;p&gt;Este párrafo no se muestra&lt;/p&gt;
+--&gt;</pre>
+</section>
+
+</body>
+</html>
