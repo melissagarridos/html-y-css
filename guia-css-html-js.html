@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía Completa: CSS, Flexbox, HTML y JavaScript</title>
+<style>
+  :root {
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-mid: #AFA9EC;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --bg: #f8f7ff;
+    --surface: #ffffff;
+    --border: #e2e0f0;
+    --text: #1a1830;
+    --text-muted: #6b6884;
+    --code-bg: #f0effe;
+    --sidebar-w: 260px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 1.5rem 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 0 1.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  .sidebar-logo h2 { font-size: 15px; font-weight: 700; color: var(--purple); }
+  .sidebar-logo p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .sidebar-group { margin-bottom: 0.5rem; }
+  .sidebar-group-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding: 0.5rem 1.5rem 0.25rem;
+  }
+  .sidebar a {
+    display: block; padding: 7px 1.5rem;
+    font-size: 13.5px; color: var(--text-muted);
+    text-decoration: none; border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .sidebar a:hover { color: var(--purple); background: var(--purple-light); }
+  .sidebar a.active {
+    color: var(--purple); background: var(--purple-light);
+    border-left-color: var(--purple); font-weight: 600;
+  }
+
+  /* ── MAIN ── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 3rem 3rem 6rem;
+    max-width: calc(900px + var(--sidebar-w));
+  }
+
+  /* ── SECTIONS ── */
+  .chapter {
+    margin-bottom: 5rem;
+  }
+
+  .chapter-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 2rem; padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .chapter-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .icon-css  { background: var(--blue-light); }
+  .icon-flex { background: var(--teal-light); }
+  .icon-html { background: var(--coral-light); }
+  .icon-js   { background: var(--amber-light); }
+
+  .chapter-header h1 { font-size: 26px; font-weight: 700; }
+  .chapter-header p { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── TOPICS ── */
+  .topic { margin-bottom: 2.5rem; }
+  .topic h2 {
+    font-size: 18px; font-weight: 700; margin-bottom: 0.75rem;
+    color: var(--text); display: flex; align-items: center; gap: 8px;
+  }
+  .topic h2::before {
+    content: ''; display: inline-block; width: 4px; height: 18px;
+    border-radius: 2px; background: var(--purple); flex-shrink: 0;
+  }
+  .topic p, .topic li { font-size: 15px; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .topic ul { padding-left: 1.5rem; }
+  .topic ul li { margin-bottom: 4px; }
+
+  /* ── CODE BLOCKS ── */
+  .code-wrap { margin: 1rem 0; border-radius: 10px; overflow: hidden; }
+  .code-label {
+    background: var(--purple); color: white;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    padding: 6px 14px; text-transform: uppercase;
+  }
+  pre {
+    background: #1e1b4b;
+    color: #e0ddff;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    tab-size: 2;
+  }
+  .kw  { color: #c4b5fd; font-weight: 600; }   /* keywords */
+  .prop{ color: #86efac; }                       /* properties */
+  .val { color: #fca5a5; }                       /* values */
+  .str { color: #fcd34d; }                       /* strings */
+  .tag { color: #93c5fd; }                       /* html tags */
+  .attr{ color: #6ee7b7; }                       /* attributes */
+  .cm  { color: #6b7280; font-style: italic; }  /* comments */
+  .fn  { color: #f9a8d4; }                       /* functions */
+  .num { color: #fb923c; }                       /* numbers */
+
+  /* ── TIP / NOTE BOXES ── */
+  .tip {
+    background: var(--teal-light); border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0; padding: 12px 16px;
+    font-size: 14px; color: #085041; margin: 1rem 0; line-height: 1.6;
+  }
+  .tip strong { color: #063d2e; }
+  .note {
+    background: var(--blue-light); border-left: 4px solid var(--blue);
+    border-radius: 0 8px 8px 0; padding: 12px 16px;
+    font-size: 14px; color: #0c3260; margin: 1rem 0; line-height: 1.6;
+  }
+  .warn {
+    background: var(--amber-light); border-left: 4px solid var(--amber);
+    border-radius: 0 8px 8px 0; padding: 12px 16px;
+    font-size: 14px; color: #5a3500; margin: 1rem 0; line-height: 1.6;
+  }
+
+  /* ── DEMO BOXES ── */
+  .demo {
+    border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 1.25rem; margin: 1rem 0; background: var(--surface);
+  }
+  .demo-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
+  }
+
+  /* Flexbox demos */
+  .fx { display: flex; gap: 8px; padding: 12px; border-radius: 8px; background: #f0effe; min-height: 60px; align-items: center; flex-wrap: wrap; }
+  .fx-box { background: var(--purple); color: var(--purple-light); padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+  .fx-box-t { background: var(--teal); color: var(--teal-light); padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+  .fx-box-c { background: var(--coral); color: var(--coral-light); padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+
+  /* Box model demo */
+  .box-model {
+    display: inline-block; background: #faeeda; padding: 14px;
+    border-radius: 6px; font-size: 12px; color: #5a3500; font-weight: 600;
+  }
+  .box-model-border {
+    background: #f0997b; padding: 10px; border-radius: 4px; color: #4A1B0C;
+  }
+  .box-model-padding {
+    background: #afd3f5; padding: 10px; border-radius: 4px; color: #042C53;
+  }
+  .box-model-content {
+    background: white; padding: 10px 20px; border-radius: 3px;
+    color: var(--text); border: 2px dashed #ccc; font-weight: 700;
+  }
+
+  /* ── TABLE ── */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 14px; margin: 1rem 0; }
+  .tbl th { background: var(--purple); color: white; padding: 10px 14px; text-align: left; font-weight: 600; }
+  .tbl td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .tbl tr:nth-child(even) td { background: var(--purple-light); }
+  .tbl code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 13px; color: var(--purple); }
+
+  /* ── BADGE ── */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .badge-p { background: var(--purple-light); color: #3C3489; }
+  .badge-t { background: var(--teal-light); color: #085041; }
+  .badge-c { background: var(--coral-light); color: #7a2e14; }
+  .badge-a { background: var(--amber-light); color: #5a3500; }
+
+  /* ── INLINE CODE ── */
+  code {
+    background: var(--code-bg); color: var(--purple);
+    padding: 2px 7px; border-radius: 4px; font-size: 13.5px;
+    font-family: 'Consolas', monospace;
+  }
+
+  /* ── GRID ── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) {
+    .grid2 { grid-template-columns: 1fr; }
+    #main { padding: 2rem 1.25rem 6rem; }
+    #sidebar { transform: translateX(-100%); }
+    #main { margin-left: 0; }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px; background: var(--border); margin: 2rem 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #534AB7 0%, #185FA5 100%);
+    color: white; border-radius: 16px; padding: 2.5rem;
+    margin-bottom: 3rem;
+  }
+  .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 0.5rem; }
+  .hero p { font-size: 16px; opacity: 0.85; max-width: 520px; line-height: 1.6; }
+  .hero-badges { margin-top: 1.5rem; display: flex; gap: 8px; flex-wrap: wrap; }
+  .hero-badge {
+    background: rgba(255,255,255,0.2); color: white;
+    padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+  }
+
+  /* ── JS INTERACTIVE ── */
+  .js-playground {
+    background: #1e1b4b; border-radius: 10px; padding: 1.25rem; margin: 1rem 0;
+  }
+  .js-playground label { color: #c4b5fd; font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px; }
+  .js-playground input[type=text] {
+    width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #534AB7;
+    background: #2d2a5e; color: white; font-size: 14px; font-family: monospace;
+    outline: none;
+  }
+  .js-playground input[type=text]:focus { border-color: #AFA9EC; }
+  .js-output {
+    margin-top: 10px; padding: 10px 14px; background: #111827;
+    border-radius: 6px; font-family: monospace; font-size: 13px; color: #86efac;
+    min-height: 36px;
+  }
+  .js-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .js-btn {
+    padding: 6px 14px; border-radius: 6px; border: 1px solid #534AB7;
+    background: #2d2a5e; color: #c4b5fd; font-size: 13px; cursor: pointer;
+    transition: all 0.15s; font-weight: 600;
+  }
+  .js-btn:hover { background: #534AB7; color: white; }
+
+  #demo-target {
+    padding: 14px 20px; border-radius: 8px; text-align: center;
+    font-size: 15px; font-weight: 600; transition: all 0.35s;
+    background: var(--purple-light); color: var(--purple);
+    border: 2px solid var(--purple-mid);
+  }
+  #demo-target.active-state {
+    background: var(--teal-light); color: #063d2e; border-color: var(--teal);
+  }
+
+  /* progress bar demo */
+  .progress-demo { background: #e2e0f0; border-radius: 20px; overflow: hidden; height: 20px; margin: 8px 0; }
+  .progress-bar { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--purple), #93c5fd); transition: width 0.6s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 700; }
+
+  /* ── FLEX VISUAL ── */
+  .flex-visual {
+    border: 2px dashed var(--purple-mid); border-radius: 8px;
+    padding: 10px; background: var(--purple-light); margin: 6px 0;
+    display: flex; gap: 8px; min-height: 56px; align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     SIDEBAR
+══════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <h2>📚 Guía Web Dev</h2>
+    <p>CSS · Flexbox · HTML · JavaScript</p>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">CSS</div>
+    <a href="#css-intro">¿Qué es CSS?</a>
+    <a href="#css-vincular">Cómo vincular CSS</a>
+    <a href="#css-selectores">Selectores</a>
+    <a href="#css-boxmodel">Box Model</a>
+    <a href="#css-display">Display</a>
+    <a href="#css-tipografia">Tipografía</a>
+    <a href="#css-colores">Colores y fondos</a>
+    <a href="#css-espaciado">Espaciado</a>
+    <a href="#css-variables">Variables CSS</a>
+    <a href="#css-posicion">Posicionamiento</a>
+    <a href="#css-animaciones">Animaciones</a>
+    <a href="#css-responsive">Responsive</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Flexbox</div>
+    <a href="#flex-intro">¿Qué es Flexbox?</a>
+    <a href="#flex-contenedor">Contenedor flex</a>
+    <a href="#flex-hijos">Hijos flex</a>
+    <a href="#flex-centrar">Centrar elementos</a>
+    <a href="#flex-patrones">Patrones comunes</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">HTML</div>
+    <a href="#html-estructura">Estructura base</a>
+    <a href="#html-etiquetas">Etiquetas esenciales</a>
+    <a href="#html-semantico">HTML semántico</a>
+    <a href="#html-formularios">Formularios</a>
+    <a href="#html-atributos">Atributos clave</a>
+    <a href="#html-tablas">Tablas</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">JavaScript + CSS</div>
+    <a href="#js-seleccionar">Seleccionar elementos</a>
+    <a href="#js-estilos">Cambiar estilos</a>
+    <a href="#js-clases">classList</a>
+    <a href="#js-eventos">Eventos</a>
+    <a href="#js-dom">Crear elementos</a>
+    <a href="#js-variables-css">Variables CSS + JS</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════
+     MAIN CONTENT
+══════════════════════════════ -->
+<main id="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Guía Completa de Desarrollo Web</h1>
+    <p>Todo lo que necesitas saber para crear páginas web: CSS, Flexbox, HTML y cómo conectarlos con JavaScript. Explicado desde cero, con ejemplos visuales.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">🎨 CSS</span>
+      <span class="hero-badge">📦 Flexbox</span>
+      <span class="hero-badge">🌐 HTML</span>
+      <span class="hero-badge">⚡ JavaScript</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       CAPÍTULO 1: CSS
+  ══════════════════════════════ -->
+  <div class="chapter" id="cap-css">
+    <div class="chapter-header">
+      <div class="chapter-icon icon-css">🎨</div>
+      <div>
+        <h1>CSS — Cascading Style Sheets</h1>
+        <p>El lenguaje que da estilo visual a tu HTML</p>
+      </div>
+    </div>
+
+    <!-- ¿Qué es CSS? -->
+    <div class="topic" id="css-intro">
+      <h2>¿Qué es CSS?</h2>
+      <p>CSS (Hojas de Estilo en Cascada) es el lenguaje que controla <strong>cómo se ve</strong> tu HTML: colores, tamaños, fuentes, espaciado, animaciones y mucho más.</p>
+      <p>Se llama "en cascada" porque los estilos se aplican de arriba hacia abajo y los más específicos o más abajo en el archivo <strong>ganan</strong> sobre los anteriores.</p>
+      <div class="note">📌 HTML define <strong>qué</strong> hay en la página. CSS define <strong>cómo se ve</strong>. JavaScript define <strong>cómo se comporta</strong>.</div>
+    </div>
+
+    <!-- Cómo vincular -->
+    <div class="topic" id="css-vincular">
+      <h2>Cómo vincular CSS a HTML</h2>
+      <p>Hay tres formas de agregar CSS. La mejor práctica es usar un archivo externo.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">1 — Archivo externo (✅ recomendado)</div>
+        <pre><span class="cm">&lt;!-- Dentro del &lt;head&gt; de tu HTML --&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"estilos.css"</span><span class="tag">&gt;</span></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">2 — Dentro del HTML con &lt;style&gt;</div>
+        <pre><span class="tag">&lt;style&gt;</span>
+  <span class="prop">p</span> { <span class="prop">color</span>: <span class="val">blue</span>; }
+<span class="tag">&lt;/style&gt;</span></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">3 — Estilos inline (⚠️ evitar en lo posible)</div>
+        <pre><span class="tag">&lt;p</span> <span class="attr">style</span>=<span class="str">"color: blue; font-size: 16px;"</span><span class="tag">&gt;</span>Texto<span class="tag">&lt;/p&gt;</span></pre>
+      </div>
+
+      <div class="warn">⚠️ Los estilos inline tienen la mayor especificidad y son difíciles de mantener. Úsalos solo cuando sea absolutamente necesario.</div>
+    </div>
+
+    <!-- Selectores -->
+    <div class="topic" id="css-selectores">
+      <h2>Selectores</h2>
+      <p>Los selectores indican a qué elementos HTML aplicar los estilos. Son la parte más importante de CSS.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Tipos de selectores</div>
+        <pre><span class="cm">/* Por etiqueta — aplica a TODOS los &lt;p&gt; */</span>
+<span class="prop">p</span> { <span class="prop">color</span>: <span class="val">gray</span>; }
+
+<span class="cm">/* Por clase — aplica a elementos con class="tarjeta" */</span>
+<span class="prop">.tarjeta</span> { <span class="prop">background</span>: <span class="val">white</span>; <span class="prop">border-radius</span>: <span class="val">8px</span>; }
+
+<span class="cm">/* Por ID — aplica al elemento con id="menu" (único) */</span>
+<span class="prop">#menu</span> { <span class="prop">position</span>: <span class="val">fixed</span>; <span class="prop">top</span>: <span class="val">0</span>; }
+
+<span class="cm">/* Combinado — todos los &lt;p&gt; dentro de .tarjeta */</span>
+<span class="prop">.tarjeta p</span> { <span class="prop">font-size</span>: <span class="val">14px</span>; }
+
+<span class="cm">/* Hijo directo */</span>
+<span class="prop">ul > li</span> { <span class="prop">list-style</span>: <span class="val">none</span>; }
+
+<span class="cm">/* Pseudo-clases — estados especiales */</span>
+<span class="prop">a:hover</span>         { <span class="prop">color</span>: <span class="val">purple</span>; }         <span class="cm">/* al pasar el mouse */</span>
+<span class="prop">input:focus</span>     { <span class="prop">border-color</span>: <span class="val">blue</span>; }   <span class="cm">/* al hacer clic */</span>
+<span class="prop">li:first-child</span>  { <span class="prop">font-weight</span>: <span class="val">bold</span>; }   <span class="cm">/* primer elemento */</span>
+<span class="prop">li:last-child</span>   { <span class="prop">margin-bottom</span>: <span class="val">0</span>; }   <span class="cm">/* último elemento */</span>
+<span class="prop">li:nth-child(2)</span> { <span class="prop">color</span>: <span class="val">red</span>; }          <span class="cm">/* segundo elemento */</span>
+
+<span class="cm">/* Pseudo-elemento */</span>
+<span class="prop">p::first-letter</span> { <span class="prop">font-size</span>: <span class="val">2em</span>; }     <span class="cm">/* primera letra */</span>
+<span class="prop">div::before</span>     { <span class="prop">content</span>: <span class="str">'★'</span>; }       <span class="cm">/* antes del elemento */</span>
+<span class="prop">div::after</span>      { <span class="prop">content</span>: <span class="str">'.'</span>; }        <span class="cm">/* después del elemento */</span>
+
+<span class="cm">/* Múltiples selectores con coma */</span>
+<span class="prop">h1, h2, h3</span> { <span class="prop">font-family</span>: <span class="val">Georgia, serif</span>; }
+
+<span class="cm">/* Selector universal */</span>
+<span class="prop">*</span> { <span class="prop">box-sizing</span>: <span class="val">border-box</span>; }</pre>
+      </div>
+
+      <div class="tip">💡 <strong>Especificidad:</strong> ID (#) &gt; Clase (.) &gt; Etiqueta. Cuando dos reglas aplican al mismo elemento, gana la más específica. Los estilos <code>inline</code> ganan sobre todos.</div>
+
+      <table class="tbl">
+        <thead><tr><th>Selector</th><th>Ejemplo</th><th>Especificidad</th></tr></thead>
+        <tbody>
+          <tr><td>Etiqueta</td><td><code>p { }</code></td><td>Baja (0,0,1)</td></tr>
+          <tr><td>Clase</td><td><code>.btn { }</code></td><td>Media (0,1,0)</td></tr>
+          <tr><td>ID</td><td><code>#logo { }</code></td><td>Alta (1,0,0)</td></tr>
+          <tr><td>Inline</td><td><code>style="..."</code></td><td>Muy alta (1,0,0,0)</td></tr>
+          <tr><td>!important</td><td><code>color: red !important</code></td><td>Máxima (evitar)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Box Model -->
+    <div class="topic" id="css-boxmodel">
+      <h2>Box Model — El modelo de caja</h2>
+      <p>Todo elemento HTML es tratado como una caja rectangular con 4 capas. Entender esto es fundamental para controlar el layout.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Propiedades del box model</div>
+        <pre><span class="prop">div</span> {
+  <span class="prop">width</span>: <span class="val">300px</span>;          <span class="cm">/* ancho del contenido */</span>
+  <span class="prop">height</span>: <span class="val">200px</span>;         <span class="cm">/* alto del contenido */</span>
+  <span class="prop">padding</span>: <span class="val">20px</span>;         <span class="cm">/* espacio DENTRO del borde */</span>
+  <span class="prop">border</span>: <span class="val">2px solid #333</span>; <span class="cm">/* el borde visible */</span>
+  <span class="prop">margin</span>: <span class="val">30px</span>;          <span class="cm">/* espacio FUERA del borde */</span>
+
+  <span class="cm">/* ¡Muy importante! — incluye padding y border en width */</span>
+  <span class="prop">box-sizing</span>: <span class="val">border-box</span>;
+}
+
+<span class="cm">/* Shorthand — arriba | der | abajo | izq */</span>
+<span class="prop">padding</span>: <span class="val">10px 20px 10px 20px</span>;
+<span class="prop">padding</span>: <span class="val">10px 20px</span>;    <span class="cm">/* vertical | horizontal */</span>
+<span class="prop">padding</span>: <span class="val">10px</span>;          <span class="cm">/* todos lados iguales */</span>
+
+<span class="cm">/* Lados individuales */</span>
+<span class="prop">padding-top</span>: <span class="val">10px</span>;
+<span class="prop">margin-left</span>: <span class="val">auto</span>;       <span class="cm">/* centra horizontalmente */</span>
+<span class="prop">border-radius</span>: <span class="val">8px</span>;     <span class="cm">/* bordes redondeados */</span>
+<span class="prop">border-radius</span>: <span class="val">50%</span>;      <span class="cm">/* círculo perfecto */</span>
+}</pre>
+      </div>
+
+      <div class="demo">
+        <div class="demo-title">Visual del Box Model</div>
+        <div style="text-align:center;">
+          <div class="box-model">
+            <div style="font-size:11px; margin-bottom:8px; text-align:center;">📦 margin</div>
+            <div class="box-model-border">
+              <div style="font-size:11px; margin-bottom:6px; text-align:center;">🔲 border</div>
+              <div class="box-model-padding">
+                <div style="font-size:11px; margin-bottom:6px; text-align:center;">⬛ padding</div>
+                <div class="box-model-content">contenido (width × height)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">💡 Agrega <code>* { box-sizing: border-box; }</code> al inicio de todo proyecto. Así el <code>width</code> que defines incluye el padding y border, lo que hace los cálculos mucho más intuitivos.</div>
+    </div>
+
+    <!-- Display -->
+    <div class="topic" id="css-display">
+      <h2>Propiedad display</h2>
+      <p>Define cómo un elemento se comporta en el flujo del documento.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">Valores de display</div>
+        <pre><span class="prop">div</span>    { <span class="prop">display</span>: <span class="val">block</span>; }         <span class="cm">/* ocupa toda la línea */</span>
+<span class="prop">span</span>   { <span class="prop">display</span>: <span class="val">inline</span>; }        <span class="cm">/* va en línea con el texto */</span>
+<span class="prop">img</span>    { <span class="prop">display</span>: <span class="val">inline-block</span>; }  <span class="cm">/* inline pero acepta width/height */</span>
+<span class="prop">.nav</span>  { <span class="prop">display</span>: <span class="val">flex</span>; }          <span class="cm">/* layout flexible (ver cap. Flexbox) */</span>
+<span class="prop">.grid</span> { <span class="prop">display</span>: <span class="val">grid</span>; }          <span class="cm">/* layout en cuadrícula */</span>
+<span class="prop">.hide</span> { <span class="prop">display</span>: <span class="val">none</span>; }          <span class="cm">/* oculta el elemento completamente */</span></pre>
+      </div>
+
+      <table class="tbl">
+        <thead><tr><th>Valor</th><th>Comportamiento</th><th>¿Acepta width/height?</th></tr></thead>
+        <tbody>
+          <tr><td><code>block</code></td><td>Nueva línea, ocupa 100% del ancho</td><td>✅ Sí</td></tr>
+          <tr><td><code>inline</code></td><td>Fluye con el texto, sin salto</td><td>❌ No</td></tr>
+          <tr><td><code>inline-block</code></td><td>Fluye con texto pero acepta dimensiones</td><td>✅ Sí</td></tr>
+          <tr><td><code>flex</code></td><td>Contenedor flexible (Flexbox)</td><td>✅ Sí</td></tr>
+          <tr><td><code>none</code></td><td>El elemento desaparece del layout</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tipografía -->
+    <div class="topic" id="css-tipografia">
+      <h2>Tipografía</h2>
+      <div class="code-wrap">
+        <div class="code-label">Propiedades de texto</div>
+        <pre><span class="prop">p</span> {
+  <span class="cm">/* Fuente */</span>
+  <span class="prop">font-family</span>: <span class="val">'Segoe UI', Arial, sans-serif</span>; <span class="cm">/* lista de opciones */</span>
+  <span class="prop">font-size</span>: <span class="val">16px</span>;    <span class="cm">/* tamaño. También em, rem, % */</span>
+  <span class="prop">font-weight</span>: <span class="val">400</span>;    <span class="cm">/* grosor: 400=normal, 700=bold */</span>
+  <span class="prop">font-style</span>: <span class="val">italic</span>;  <span class="cm">/* normal | italic | oblique */</span>
+
+  <span class="cm">/* Texto */</span>
+  <span class="prop">color</span>: <span class="val">#333</span>;
+  <span class="prop">text-align</span>: <span class="val">center</span>;     <span class="cm">/* left | right | center | justify */</span>
+  <span class="prop">text-decoration</span>: <span class="val">none</span>;  <span class="cm">/* underline | line-through | none */</span>
+  <span class="prop">text-transform</span>: <span class="val">uppercase</span>; <span class="cm">/* uppercase | lowercase | capitalize */</span>
+  <span class="prop">letter-spacing</span>: <span class="val">0.05em</span>; <span class="cm">/* espacio entre letras */</span>
+  <span class="prop">line-height</span>: <span class="val">1.6</span>;       <span class="cm">/* altura de línea (sin unidad = relativo) */</span>
+  <span class="prop">word-spacing</span>: <span class="val">4px</span>;      <span class="cm">/* espacio entre palabras */</span>
+  <span class="prop">white-space</span>: <span class="val">nowrap</span>;    <span class="cm">/* evita saltos de línea */</span>
+
+  <span class="cm">/* Desbordamiento de texto */</span>
+  <span class="prop">overflow</span>: <span class="val">hidden</span>;
+  <span class="prop">text-overflow</span>: <span class="val">ellipsis</span>; <span class="cm">/* muestra "..." si no cabe */</span>
+}</pre>
+      </div>
+      <div class="tip">💡 Usa <strong>rem</strong> para tamaños de fuente (relativo al root, predecible) y <strong>em</strong> para padding/margin (relativo al elemento padre).</div>
+    </div>
+
+    <!-- Colores -->
+    <div class="topic" id="css-colores">
+      <h2>Colores y fondos</h2>
+      <div class="code-wrap">
+        <div class="code-label">Formas de definir color</div>
+        <pre><span class="cm">/* Nombre */</span>
+<span class="prop">color</span>: <span class="val">red</span>;
+<span class="prop">color</span>: <span class="val">transparent</span>;
+
+<span class="cm">/* Hexadecimal */</span>
+<span class="prop">color</span>: <span class="val">#534AB7</span>;   <span class="cm">/* #RRGGBB */</span>
+<span class="prop">color</span>: <span class="val">#fff</span>;      <span class="cm">/* abreviado #FFF = #FFFFFF */</span>
+
+<span class="cm">/* RGB y RGBA (con transparencia) */</span>
+<span class="prop">color</span>: <span class="val">rgb(83, 74, 183)</span>;
+<span class="prop">color</span>: <span class="val">rgba(83, 74, 183, 0.5)</span>; <span class="cm">/* 0=transparente, 1=sólido */</span>
+
+<span class="cm">/* HSL — más intuitivo para diseño */</span>
+<span class="prop">color</span>: <span class="val">hsl(244, 44%, 50%)</span>;    <span class="cm">/* tono, saturación, luminosidad */</span>
+
+<span class="cm">/* Fondos */</span>
+<span class="prop">background-color</span>: <span class="val">#f0f0f0</span>;
+<span class="prop">background-image</span>: <span class="val">url('imagen.jpg')</span>;
+<span class="prop">background-size</span>: <span class="val">cover</span>;         <span class="cm">/* cover | contain | 100% */</span>
+<span class="prop">background-position</span>: <span class="val">center</span>;
+<span class="prop">background-repeat</span>: <span class="val">no-repeat</span>;
+
+<span class="cm">/* Gradiente */</span>
+<span class="prop">background</span>: <span class="val">linear-gradient(135deg, #534AB7, #185FA5)</span>;
+<span class="prop">background</span>: <span class="val">radial-gradient(circle, #AFA9EC, #534AB7)</span>;</pre>
+      </div>
+    </div>
+
+    <!-- Espaciado -->
+    <div class="topic" id="css-espaciado">
+      <h2>Espaciado y dimensiones</h2>
+      <div class="code-wrap">
+        <div class="code-label">Unidades y tamaños</div>
+        <pre><span class="cm">/* Unidades absolutas */</span>
+<span class="prop">width</span>: <span class="val">300px</span>;         <span class="cm">/* píxeles — exacto */</span>
+
+<span class="cm">/* Unidades relativas */</span>
+<span class="prop">width</span>: <span class="val">50%</span>;           <span class="cm">/* porcentaje del padre */</span>
+<span class="prop">font-size</span>: <span class="val">1.5rem</span>;    <span class="cm">/* relativo al root (usualmente 16px) */</span>
+<span class="prop">padding</span>: <span class="val">1em</span>;         <span class="cm">/* relativo al font-size del elemento */</span>
+<span class="prop">height</span>: <span class="val">100vh</span>;        <span class="cm">/* viewport height — 100% de la pantalla */</span>
+<span class="prop">width</span>: <span class="val">100vw</span>;         <span class="cm">/* viewport width */</span>
+<span class="prop">width</span>: <span class="val">clamp(200px, 50%, 600px)</span>; <span class="cm">/* mín, preferido, máx */</span>
+
+<span class="cm">/* Límites */</span>
+<span class="prop">max-width</span>: <span class="val">1200px</span>;    <span class="cm">/* no crece más */</span>
+<span class="prop">min-height</span>: <span class="val">100px</span>;   <span class="cm">/* no encoge más */</span>
+
+<span class="cm">/* Desbordamiento */</span>
+<span class="prop">overflow</span>: <span class="val">hidden</span>;     <span class="cm">/* oculta lo que sale */</span>
+<span class="prop">overflow</span>: <span class="val">scroll</span>;     <span class="cm">/* siempre scrollbar */</span>
+<span class="prop">overflow</span>: <span class="val">auto</span>;       <span class="cm">/* scrollbar solo si necesita */</span>
+<span class="prop">overflow-x</span>: <span class="val">auto</span>;     <span class="cm">/* solo horizontal */</span></pre>
+      </div>
+    </div>
+
+    <!-- Variables CSS -->
+    <div class="topic" id="css-variables">
+      <h2>Variables CSS (Custom Properties)</h2>
+      <p>Permiten guardar valores reutilizables. Son esenciales para mantener un código consistente y fácil de mantener.</p>
+      <div class="code-wrap">
+        <div class="code-label">Definir y usar variables</div>
+        <pre><span class="cm">/* Define en :root para acceso global */</span>
+<span class="prop">:root</span> {
+  <span class="prop">--color-primario</span>: <span class="val">#534AB7</span>;
+  <span class="prop">--color-texto</span>: <span class="val">#1a1830</span>;
+  <span class="prop">--radio</span>: <span class="val">8px</span>;
+  <span class="prop">--sombra</span>: <span class="val">0 4px 12px rgba(0,0,0,0.1)</span>;
+  <span class="prop">--espaciado-md</span>: <span class="val">16px</span>;
+}
+
+<span class="cm">/* Usa con var() */</span>
+<span class="prop">button</span> {
+  <span class="prop">background</span>: <span class="val">var(--color-primario)</span>;
+  <span class="prop">border-radius</span>: <span class="val">var(--radio)</span>;
+  <span class="prop">box-shadow</span>: <span class="val">var(--sombra)</span>;
+  <span class="prop">padding</span>: <span class="val">var(--espaciado-md)</span>;
+}
+
+<span class="cm">/* Valor de respaldo si la variable no existe */</span>
+<span class="prop">color</span>: <span class="val">var(--color-secundario, gray)</span>;
+
+<span class="cm">/* Dark mode con variables */</span>
+<span class="kw">@media</span> (prefers-color-scheme: dark) {
+  <span class="prop">:root</span> {
+    <span class="prop">--color-texto</span>: <span class="val">#e0ddff</span>;
+    <span class="prop">--color-fondo</span>: <span class="val">#1e1b4b</span>;
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- Posicionamiento -->
+    <div class="topic" id="css-posicion">
+      <h2>Posicionamiento</h2>
+      <div class="code-wrap">
+        <div class="code-label">La propiedad position</div>
+        <pre><span class="cm">/* static (por defecto) — flujo normal */</span>
+<span class="prop">div</span> { <span class="prop">position</span>: <span class="val">static</span>; }
+
+<span class="cm">/* relative — se mueve desde su posición original */</span>
+<span class="prop">div</span> {
+  <span class="prop">position</span>: <span class="val">relative</span>;
+  <span class="prop">top</span>: <span class="val">10px</span>;  <span class="prop">left</span>: <span class="val">20px</span>; <span class="cm">/* desplazamiento */</span>
+}
+
+<span class="cm">/* absolute — se posiciona respecto al padre con position != static */</span>
+<span class="prop">.icono</span> {
+  <span class="prop">position</span>: <span class="val">absolute</span>;
+  <span class="prop">top</span>: <span class="val">10px</span>;  <span class="prop">right</span>: <span class="val">10px</span>;
+}
+
+<span class="cm">/* fixed — se fija en la ventana, no se mueve al hacer scroll */</span>
+<span class="prop">.navbar</span> {
+  <span class="prop">position</span>: <span class="val">fixed</span>;
+  <span class="prop">top</span>: <span class="val">0</span>; <span class="prop">left</span>: <span class="val">0</span>; <span class="prop">width</span>: <span class="val">100%</span>;
+  <span class="prop">z-index</span>: <span class="val">1000</span>; <span class="cm">/* capa — mayor número = encima */</span>
+}
+
+<span class="cm">/* sticky — se pega al hacer scroll hasta cierto punto */</span>
+<span class="prop">th</span> {
+  <span class="prop">position</span>: <span class="val">sticky</span>;
+  <span class="prop">top</span>: <span class="val">0</span>;
+}</pre>
+      </div>
+      <div class="tip">💡 Para que <code>position: absolute</code> funcione correctamente, el padre debe tener <code>position: relative</code>. Si no, el elemento se posiciona respecto al &lt;body&gt;.</div>
+    </div>
+
+    <!-- Animaciones -->
+    <div class="topic" id="css-animaciones">
+      <h2>Transiciones y animaciones</h2>
+      <div class="code-wrap">
+        <div class="code-label">transition — cambios suaves</div>
+        <pre><span class="prop">button</span> {
+  <span class="prop">background</span>: <span class="val">purple</span>;
+  <span class="cm">/* propiedad | duración | función | retraso */</span>
+  <span class="prop">transition</span>: <span class="val">background 0.3s ease, transform 0.2s ease</span>;
+}
+<span class="prop">button:hover</span> {
+  <span class="prop">background</span>: <span class="val">darkpurple</span>;
+  <span class="prop">transform</span>: <span class="val">scale(1.05)</span>;
+}
+
+<span class="cm">/* Funciones de timing */</span>
+<span class="prop">transition-timing-function</span>: <span class="val">ease</span>;        <span class="cm">/* suave */</span>
+<span class="prop">transition-timing-function</span>: <span class="val">linear</span>;      <span class="cm">/* constante */</span>
+<span class="prop">transition-timing-function</span>: <span class="val">ease-in-out</span>; <span class="cm">/* lento-rápido-lento */</span></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">@keyframes — animaciones complejas</div>
+        <pre><span class="cm">/* Define la animación */</span>
+<span class="kw">@keyframes</span> <span class="fn">aparecer</span> {
+  <span class="kw">from</span> { <span class="prop">opacity</span>: <span class="val">0</span>; <span class="prop">transform</span>: <span class="val">translateY(-20px)</span>; }
+  <span class="kw">to</span>   { <span class="prop">opacity</span>: <span class="val">1</span>; <span class="prop">transform</span>: <span class="val">translateY(0)</span>; }
+}
+
+<span class="kw">@keyframes</span> <span class="fn">pulso</span> {
+  <span class="num">0%</span>   { <span class="prop">transform</span>: <span class="val">scale(1)</span>; }
+  <span class="num">50%</span>  { <span class="prop">transform</span>: <span class="val">scale(1.1)</span>; }
+  <span class="num">100%</span> { <span class="prop">transform</span>: <span class="val">scale(1)</span>; }
+}
+
+<span class="cm">/* Aplica la animación */</span>
+<span class="prop">.tarjeta</span> {
+  <span class="prop">animation</span>: <span class="val">aparecer 0.5s ease forwards</span>;
+  <span class="cm">/* nombre | duración | timing | fill-mode */</span>
+}
+
+<span class="prop">.icono</span> {
+  <span class="prop">animation</span>: <span class="val">pulso 2s ease-in-out infinite</span>;
+  <span class="prop">animation-delay</span>: <span class="val">0.3s</span>; <span class="cm">/* retraso antes de iniciar */</span>
+}
+
+<span class="cm">/* transform — transforma sin mover el flujo */</span>
+<span class="prop">div</span> {
+  <span class="prop">transform</span>: <span class="val">rotate(45deg)</span>;         <span class="cm">/* rotar */</span>
+  <span class="prop">transform</span>: <span class="val">scale(1.2)</span>;            <span class="cm">/* agrandar */</span>
+  <span class="prop">transform</span>: <span class="val">translateX(50px)</span>;      <span class="cm">/* mover horizontal */</span>
+  <span class="prop">transform</span>: <span class="val">translate(10px, -5px)</span>; <span class="cm">/* x e y */</span>
+  <span class="prop">transform</span>: <span class="val">skew(10deg)</span>;           <span class="cm">/* inclinar */</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- Responsive -->
+    <div class="topic" id="css-responsive">
+      <h2>Diseño responsive — Media Queries</h2>
+      <p>Las media queries permiten aplicar estilos distintos según el tamaño de la pantalla.</p>
+      <div class="code-wrap">
+        <div class="code-label">Media queries</div>
+        <pre><span class="cm">/* Mobile first: diseña para móvil primero */</span>
+<span class="prop">.contenedor</span> {
+  <span class="prop">padding</span>: <span class="val">1rem</span>;
+  <span class="prop">flex-direction</span>: <span class="val">column</span>; <span class="cm">/* columna en móvil */</span>
+}
+
+<span class="cm">/* Tablet y mayor (768px+) */</span>
+<span class="kw">@media</span> (min-width: <span class="val">768px</span>) {
+  <span class="prop">.contenedor</span> {
+    <span class="prop">padding</span>: <span class="val">2rem</span>;
+    <span class="prop">flex-direction</span>: <span class="val">row</span>; <span class="cm">/* fila en tablet */</span>
+  }
+}
+
+<span class="cm">/* Desktop (1024px+) */</span>
+<span class="kw">@media</span> (min-width: <span class="val">1024px</span>) {
+  <span class="prop">.contenedor</span> { <span class="prop">max-width</span>: <span class="val">1200px</span>; <span class="prop">margin</span>: <span class="val">0 auto</span>; }
+}
+
+<span class="cm">/* Orientación */</span>
+<span class="kw">@media</span> (orientation: landscape) { ... }
+
+<span class="cm">/* Dark mode del sistema */</span>
+<span class="kw">@media</span> (prefers-color-scheme: dark) { ... }
+
+<span class="cm">/* Impresión */</span>
+<span class="kw">@media</span> print { <span class="prop">.sidebar</span> { <span class="prop">display</span>: <span class="val">none</span>; } }</pre>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Breakpoint</th><th>Dispositivo</th><th>Media Query</th></tr></thead>
+        <tbody>
+          <tr><td>xs</td><td>Móvil pequeño</td><td><code>max-width: 480px</code></td></tr>
+          <tr><td>sm</td><td>Móvil grande</td><td><code>min-width: 640px</code></td></tr>
+          <tr><td>md</td><td>Tablet</td><td><code>min-width: 768px</code></td></tr>
+          <tr><td>lg</td><td>Laptop</td><td><code>min-width: 1024px</code></td></tr>
+          <tr><td>xl</td><td>Desktop</td><td><code>min-width: 1280px</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       CAPÍTULO 2: FLEXBOX
+  ══════════════════════════════ -->
+  <div class="chapter" id="cap-flex">
+    <div class="chapter-header">
+      <div class="chapter-icon icon-flex">📦</div>
+      <div>
+        <h1>Flexbox</h1>
+        <p>El sistema de layout más potente para alinear y distribuir elementos</p>
+      </div>
+    </div>
+
+    <div class="topic" id="flex-intro">
+      <h2>¿Qué es Flexbox?</h2>
+      <p>Flexbox (Flexible Box Layout) es un sistema de layout de CSS que distribuye elementos hijos en una fila o columna. Se activa poniendo <code>display: flex</code> en el contenedor padre.</p>
+      <p>Tiene dos ejes:</p>
+      <ul>
+        <li><strong>Main axis (eje principal):</strong> horizontal por defecto (→)</li>
+        <li><strong>Cross axis (eje transversal):</strong> perpendicular al principal (↓)</li>
+      </ul>
+      <div class="demo">
+        <div class="demo-title">Eje principal → y eje transversal ↓</div>
+        <div class="flex-visual">
+          <div class="fx-box">1</div>
+          <div class="fx-box-t">2</div>
+          <div class="fx-box-c">3</div>
+          <div style="color:#534AB7; font-size:13px; margin-left:auto; font-weight:600;">→ main axis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="flex-contenedor">
+      <h2>Propiedades del contenedor (padre)</h2>
+      <div class="code-wrap">
+        <div class="code-label">Todas las propiedades del contenedor flex</div>
+        <pre><span class="prop">.contenedor</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;            <span class="cm">/* activa flexbox */</span>
+
+  <span class="cm">/* Dirección del eje principal */</span>
+  <span class="prop">flex-direction</span>: <span class="val">row</span>;            <span class="cm">/* → izquierda a derecha (defecto) */</span>
+  <span class="prop">flex-direction</span>: <span class="val">row-reverse</span>;   <span class="cm">/* ← derecha a izquierda */</span>
+  <span class="prop">flex-direction</span>: <span class="val">column</span>;         <span class="cm">/* ↓ arriba a abajo */</span>
+  <span class="prop">flex-direction</span>: <span class="val">column-reverse</span>; <span class="cm">/* ↑ abajo a arriba */</span>
+
+  <span class="cm">/* Alineación en el eje principal (horizontal por defecto) */</span>
+  <span class="prop">justify-content</span>: <span class="val">flex-start</span>;    <span class="cm">/* al inicio (defecto) */</span>
+  <span class="prop">justify-content</span>: <span class="val">flex-end</span>;      <span class="cm">/* al final */</span>
+  <span class="prop">justify-content</span>: <span class="val">center</span>;        <span class="cm">/* al centro */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-between</span>; <span class="cm">/* espacio entre elementos */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-around</span>;  <span class="cm">/* espacio alrededor */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-evenly</span>;  <span class="cm">/* espacio perfectamente igual */</span>
+
+  <span class="cm">/* Alineación en el eje transversal (vertical por defecto) */</span>
+  <span class="prop">align-items</span>: <span class="val">stretch</span>;           <span class="cm">/* estira (defecto) */</span>
+  <span class="prop">align-items</span>: <span class="val">flex-start</span>;        <span class="cm">/* alinea arriba */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>;            <span class="cm">/* centra verticalmente */</span>
+  <span class="prop">align-items</span>: <span class="val">flex-end</span>;          <span class="cm">/* alinea abajo */</span>
+  <span class="prop">align-items</span>: <span class="val">baseline</span>;          <span class="cm">/* alinea por línea base del texto */</span>
+
+  <span class="cm">/* Saltos de línea */</span>
+  <span class="prop">flex-wrap</span>: <span class="val">nowrap</span>;              <span class="cm">/* no salta (defecto) */</span>
+  <span class="prop">flex-wrap</span>: <span class="val">wrap</span>;                <span class="cm">/* salta a siguiente línea */</span>
+  <span class="prop">flex-wrap</span>: <span class="val">wrap-reverse</span>;        <span class="cm">/* salta en sentido inverso */</span>
+
+  <span class="cm">/* Espacio entre hijos */</span>
+  <span class="prop">gap</span>: <span class="val">16px</span>;                      <span class="cm">/* igual en ambos ejes */</span>
+  <span class="prop">gap</span>: <span class="val">10px 20px</span>;                 <span class="cm">/* row-gap | column-gap */</span>
+
+  <span class="cm">/* Shorthand: direction | wrap */</span>
+  <span class="prop">flex-flow</span>: <span class="val">row wrap</span>;
+}</pre>
+      </div>
+
+      <div class="demo">
+        <div class="demo-title">justify-content: space-between</div>
+        <div class="flex-visual" style="justify-content: space-between;">
+          <div class="fx-box">inicio</div>
+          <div class="fx-box-t">centro</div>
+          <div class="fx-box-c">final</div>
+        </div>
+        <div class="demo-title" style="margin-top:12px;">justify-content: center + align-items: center</div>
+        <div class="flex-visual" style="justify-content: center; align-items: center; height: 80px;">
+          <div class="fx-box">¡Centrado!</div>
+        </div>
+        <div class="demo-title" style="margin-top:12px;">flex-wrap: wrap</div>
+        <div class="flex-visual" style="flex-wrap: wrap;">
+          <div class="fx-box" style="min-width:70px;">Item 1</div>
+          <div class="fx-box-t" style="min-width:70px;">Item 2</div>
+          <div class="fx-box-c" style="min-width:70px;">Item 3</div>
+          <div class="fx-box" style="min-width:70px;">Item 4</div>
+          <div class="fx-box-t" style="min-width:70px;">Item 5</div>
+          <div class="fx-box-c" style="min-width:70px;">Item 6</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="flex-hijos">
+      <h2>Propiedades de los hijos</h2>
+      <div class="code-wrap">
+        <div class="code-label">Propiedades de los items flex</div>
+        <pre><span class="prop">.hijo</span> {
+  <span class="cm">/* flex-grow: cuánto puede crecer respecto a los otros */</span>
+  <span class="prop">flex-grow</span>: <span class="val">0</span>;        <span class="cm">/* no crece (defecto) */</span>
+  <span class="prop">flex-grow</span>: <span class="val">1</span>;        <span class="cm">/* crece para llenar espacio disponible */</span>
+  <span class="prop">flex-grow</span>: <span class="val">2</span>;        <span class="cm">/* crece el doble que flex-grow: 1 */</span>
+
+  <span class="cm">/* flex-shrink: cuánto puede encoger */</span>
+  <span class="prop">flex-shrink</span>: <span class="val">1</span>;      <span class="cm">/* puede encoger (defecto) */</span>
+  <span class="prop">flex-shrink</span>: <span class="val">0</span>;      <span class="cm">/* NO encoge nunca */</span>
+
+  <span class="cm">/* flex-basis: tamaño inicial antes de crecer/encoger */</span>
+  <span class="prop">flex-basis</span>: <span class="val">auto</span>;    <span class="cm">/* usa width/height (defecto) */</span>
+  <span class="prop">flex-basis</span>: <span class="val">200px</span>;   <span class="cm">/* tamaño base de 200px */</span>
+  <span class="prop">flex-basis</span>: <span class="val">33%</span>;     <span class="cm">/* porcentaje del contenedor */</span>
+
+  <span class="cm">/* Shorthand: grow | shrink | basis */</span>
+  <span class="prop">flex</span>: <span class="val">1</span>;             <span class="cm">/* = flex: 1 1 0 (crece y encoge igual) */</span>
+  <span class="prop">flex</span>: <span class="val">0 0 200px</span>;    <span class="cm">/* tamaño fijo de 200px */</span>
+  <span class="prop">flex</span>: <span class="val">none</span>;          <span class="cm">/* = 0 0 auto (no crece ni encoge) */</span>
+
+  <span class="cm">/* Alineación individual — sobreescribe align-items del padre */</span>
+  <span class="prop">align-self</span>: <span class="val">center</span>;
+  <span class="prop">align-self</span>: <span class="val">flex-end</span>;
+
+  <span class="cm">/* Orden visual (sin cambiar el HTML) */</span>
+  <span class="prop">order</span>: <span class="val">0</span>;            <span class="cm">/* valor por defecto */</span>
+  <span class="prop">order</span>: <span class="val">-1</span>;           <span class="cm">/* va primero */</span>
+  <span class="prop">order</span>: <span class="val">2</span>;            <span class="cm">/* va al final */</span>
+}</pre>
+      </div>
+
+      <div class="demo">
+        <div class="demo-title">flex: 1 (todos iguales) vs flex: 2 (doble de espacio)</div>
+        <div class="flex-visual">
+          <div class="fx-box" style="flex:1; text-align:center;">flex:1</div>
+          <div class="fx-box-t" style="flex:1; text-align:center;">flex:1</div>
+          <div class="fx-box-c" style="flex:2; text-align:center;">flex:2 (doble)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="flex-centrar">
+      <h2>Centrar elementos — el truco clásico</h2>
+      <div class="code-wrap">
+        <div class="code-label">Centrar perfectamente en pantalla</div>
+        <pre><span class="prop">.pantalla</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">justify-content</span>: <span class="val">center</span>;  <span class="cm">/* centra horizontalmente */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>;      <span class="cm">/* centra verticalmente */</span>
+  <span class="prop">height</span>: <span class="val">100vh</span>;             <span class="cm">/* toda la altura de la ventana */</span>
+  <span class="prop">min-height</span>: <span class="val">100vh</span>;
+}</pre>
+      </div>
+    </div>
+
+    <div class="topic" id="flex-patrones">
+      <h2>Patrones comunes con Flexbox</h2>
+      <div class="code-wrap">
+        <div class="code-label">Navbar horizontal</div>
+        <pre><span class="tag">&lt;nav</span> <span class="attr">class</span>=<span class="str">"navbar"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"logo"</span><span class="tag">&gt;</span>Mi App<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;ul</span> <span class="attr">class</span>=<span class="str">"nav-links"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/ul&gt;</span>
+  <span class="tag">&lt;button&gt;</span>Login<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/nav&gt;</span>
+
+<span class="prop">.navbar</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">justify-content</span>: <span class="val">space-between</span>; <span class="cm">/* logo | links | botón */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>;
+  <span class="prop">padding</span>: <span class="val">0 2rem</span>;
+  <span class="prop">height</span>: <span class="val">60px</span>;
+}
+<span class="prop">.nav-links</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">gap</span>: <span class="val">1.5rem</span>;
+  <span class="prop">list-style</span>: <span class="val">none</span>;
+}</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">Cards en cuadrícula responsive</div>
+        <pre><span class="prop">.grid-cards</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">flex-wrap</span>: <span class="val">wrap</span>;
+  <span class="prop">gap</span>: <span class="val">20px</span>;
+}
+<span class="prop">.card</span> {
+  <span class="prop">flex</span>: <span class="val">1 1 280px</span>; <span class="cm">/* crece, encoge, mínimo 280px */</span>
+  <span class="prop">max-width</span>: <span class="val">400px</span>;
+  <span class="prop">padding</span>: <span class="val">1.5rem</span>;
+  <span class="prop">border-radius</span>: <span class="val">12px</span>;
+}</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">Footer pegado al fondo de la página</div>
+        <pre><span class="prop">body</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">flex-direction</span>: <span class="val">column</span>;
+  <span class="prop">min-height</span>: <span class="val">100vh</span>;
+}
+<span class="prop">main</span> { <span class="prop">flex</span>: <span class="val">1</span>; } <span class="cm">/* crece para empujar el footer abajo */</span>
+<span class="prop">footer</span> { <span class="cm">/* se queda al fondo */</span> }</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       CAPÍTULO 3: HTML
+  ══════════════════════════════ -->
+  <div class="chapter" id="cap-html">
+    <div class="chapter-header">
+      <div class="chapter-icon icon-html">🌐</div>
+      <div>
+        <h1>HTML — HyperText Markup Language</h1>
+        <p>La estructura y el contenido de toda página web</p>
+      </div>
+    </div>
+
+    <div class="topic" id="html-estructura">
+      <h2>Estructura base de un documento</h2>
+      <div class="code-wrap">
+        <div class="code-label">Plantilla HTML completa</div>
+        <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>                <span class="cm">&lt;!-- Le dice al navegador qué versión de HTML --&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="str">"es"</span><span class="tag">&gt;</span>               <span class="cm">&lt;!-- idioma del documento --&gt;</span>
+
+<span class="tag">&lt;head&gt;</span>                           <span class="cm">&lt;!-- metadatos, no visible en pantalla --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag">&gt;</span>        <span class="cm">&lt;!-- codificación de caracteres --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="str">"viewport"</span>
+        <span class="attr">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>  <span class="cm">&lt;!-- responsive --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="str">"description"</span> <span class="attr">content</span>=<span class="str">"Descripción para SEO"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Título de la pestaña<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span> <span class="attr">href</span>=<span class="str">"estilos.css"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"icon"</span> <span class="attr">href</span>=<span class="str">"favicon.ico"</span><span class="tag">&gt;</span>  <span class="cm">&lt;!-- icono de pestaña --&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+
+<span class="tag">&lt;body&gt;</span>                           <span class="cm">&lt;!-- todo lo visible va aquí --&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>Hola mundo<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Primer párrafo<span class="tag">&lt;/p&gt;</span>
+
+  <span class="cm">&lt;!-- El script al final para no bloquear la carga --&gt;</span>
+  <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="str">"app.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="topic" id="html-etiquetas">
+      <h2>Etiquetas esenciales</h2>
+      <div class="code-wrap">
+        <div class="code-label">Texto y contenido</div>
+        <pre><span class="cm">&lt;!-- Títulos: h1 es el principal, h6 el más pequeño --&gt;</span>
+<span class="tag">&lt;h1&gt;</span>Título principal (solo uno por página)<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;h2&gt;</span>Subtítulo<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;h3&gt;</span>Sección<span class="tag">&lt;/h3&gt;</span>
+
+<span class="cm">&lt;!-- Párrafo --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Este es un párrafo de texto normal.<span class="tag">&lt;/p&gt;</span>
+
+<span class="cm">&lt;!-- Énfasis --&gt;</span>
+<span class="tag">&lt;strong&gt;</span>Texto importante (negrita)<span class="tag">&lt;/strong&gt;</span>
+<span class="tag">&lt;em&gt;</span>Texto con énfasis (cursiva)<span class="tag">&lt;/em&gt;</span>
+<span class="tag">&lt;mark&gt;</span>Texto resaltado<span class="tag">&lt;/mark&gt;</span>
+<span class="tag">&lt;code&gt;</span>código inline<span class="tag">&lt;/code&gt;</span>
+<span class="tag">&lt;del&gt;</span>texto tachado<span class="tag">&lt;/del&gt;</span>
+<span class="tag">&lt;sup&gt;</span>superíndice<span class="tag">&lt;/sup&gt;</span>  <span class="tag">&lt;sub&gt;</span>subíndice<span class="tag">&lt;/sub&gt;</span>
+
+<span class="cm">&lt;!-- Salto de línea y separador --&gt;</span>
+<span class="tag">&lt;br&gt;</span>   <span class="cm">&lt;!-- salto de línea (autocierre) --&gt;</span>
+<span class="tag">&lt;hr&gt;</span>   <span class="cm">&lt;!-- línea horizontal (autocierre) --&gt;</span>
+
+<span class="cm">&lt;!-- Contenedores genéricos --&gt;</span>
+<span class="tag">&lt;div&gt;</span>Bloque genérico (block)<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;span&gt;</span>Inline genérico<span class="tag">&lt;/span&gt;</span></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">Listas, links e imágenes</div>
+        <pre><span class="cm">&lt;!-- Lista sin orden --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Manzana<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Naranja<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cm">&lt;!-- Lista numerada --&gt;</span>
+<span class="tag">&lt;ol</span> <span class="attr">start</span>=<span class="str">"1"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Primer paso<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Segundo paso<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="cm">&lt;!-- Link (hipervínculo) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="str">"https://google.com"</span> <span class="attr">target</span>=<span class="str">"_blank"</span> <span class="attr">rel</span>=<span class="str">"noopener"</span><span class="tag">&gt;</span>
+  Ir a Google
+<span class="tag">&lt;/a&gt;</span>
+
+<span class="cm">&lt;!-- Link a sección de la misma página --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="str">"#mi-seccion"</span><span class="tag">&gt;</span>Ir a sección<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="str">"mi-seccion"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span>
+
+<span class="cm">&lt;!-- Imagen --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"foto.jpg"</span>
+     <span class="attr">alt</span>=<span class="str">"Descripción para accesibilidad y SEO"</span>
+     <span class="attr">width</span>=<span class="str">"400"</span>
+     <span class="attr">height</span>=<span class="str">"300"</span>
+     <span class="attr">loading</span>=<span class="str">"lazy"</span><span class="tag">&gt;</span>   <span class="cm">&lt;!-- lazy = carga solo cuando es visible --&gt;</span>
+
+<span class="cm">&lt;!-- Video --&gt;</span>
+<span class="tag">&lt;video</span> <span class="attr">src</span>=<span class="str">"video.mp4"</span> <span class="attr">controls</span> <span class="attr">autoplay</span> <span class="attr">muted</span><span class="tag">&gt;&lt;/video&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="topic" id="html-semantico">
+      <h2>HTML semántico</h2>
+      <p>Las etiquetas semánticas le dan significado al contenido. Mejoran el SEO, la accesibilidad y la legibilidad del código.</p>
+      <div class="code-wrap">
+        <div class="code-label">Estructura semántica de una página</div>
+        <pre><span class="tag">&lt;header&gt;</span>                     <span class="cm">&lt;!-- cabecera del sitio --&gt;</span>
+  <span class="tag">&lt;nav&gt;</span>...<span class="tag">&lt;/nav&gt;</span>              <span class="cm">&lt;!-- navegación principal --&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
+
+<span class="tag">&lt;main&gt;</span>                        <span class="cm">&lt;!-- contenido principal (solo uno) --&gt;</span>
+  <span class="tag">&lt;section&gt;</span>                   <span class="cm">&lt;!-- sección temática --&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>Noticias<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;article&gt;</span>                 <span class="cm">&lt;!-- contenido independiente/reutilizable --&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>Noticia 1<span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;p&gt;</span>...<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/article&gt;</span>
+  <span class="tag">&lt;/section&gt;</span>
+
+  <span class="tag">&lt;aside&gt;</span>                     <span class="cm">&lt;!-- contenido secundario/sidebar --&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Publicidad o links relacionados<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/aside&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="tag">&lt;footer&gt;</span>                      <span class="cm">&lt;!-- pie de página --&gt;</span>
+  <span class="tag">&lt;p&gt;</span>© 2024 Mi Empresa<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/footer&gt;</span>
+
+<span class="cm">&lt;!-- Otras etiquetas semánticas --&gt;</span>
+<span class="tag">&lt;figure&gt;</span>                      <span class="cm">&lt;!-- imagen con descripción --&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"foto.jpg"</span> <span class="attr">alt</span>=<span class="str">"..."</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;figcaption&gt;</span>Pie de foto<span class="tag">&lt;/figcaption&gt;</span>
+<span class="tag">&lt;/figure&gt;</span>
+
+<span class="tag">&lt;time</span> <span class="attr">datetime</span>=<span class="str">"2024-01-15"</span><span class="tag">&gt;</span>15 de enero 2024<span class="tag">&lt;/time&gt;</span>
+<span class="tag">&lt;address&gt;</span>Contacto: info@ejemplo.com<span class="tag">&lt;/address&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="topic" id="html-formularios">
+      <h2>Formularios</h2>
+      <div class="code-wrap">
+        <div class="code-label">Formulario completo con todos los tipos de input</div>
+        <pre><span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="str">"/enviar"</span> <span class="attr">method</span>=<span class="str">"post"</span><span class="tag">&gt;</span>
+
+  <span class="cm">&lt;!-- El label SIEMPRE debe estar enlazado al input con for/id --&gt;</span>
+  <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="str">"nombre"</span><span class="tag">&gt;</span>Nombre<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"text"</span>
+         <span class="attr">id</span>=<span class="str">"nombre"</span>
+         <span class="attr">name</span>=<span class="str">"nombre"</span>
+         <span class="attr">placeholder</span>=<span class="str">"Tu nombre"</span>
+         <span class="attr">required</span>
+         <span class="attr">minlength</span>=<span class="str">"2"</span>
+         <span class="attr">maxlength</span>=<span class="str">"50"</span><span class="tag">&gt;</span>
+
+  <span class="cm">&lt;!-- Tipos de input más usados --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"email"</span>    <span class="attr">placeholder</span>=<span class="str">"tu@email.com"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"password"</span> <span class="attr">placeholder</span>=<span class="str">"Contraseña"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"number"</span>   <span class="attr">min</span>=<span class="str">"0"</span> <span class="attr">max</span>=<span class="str">"100"</span> <span class="attr">step</span>=<span class="str">"5"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"date"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"tel"</span>      <span class="attr">pattern</span>=<span class="str">"[0-9]{10}"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"url"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"search"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"range"</span>    <span class="attr">min</span>=<span class="str">"0"</span> <span class="attr">max</span>=<span class="str">"100"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"color"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"file"</span>     <span class="attr">accept</span>=<span class="str">".jpg,.png"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"checkbox"</span> <span class="attr">checked</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"radio"</span>    <span class="attr">name</span>=<span class="str">"grupo"</span> <span class="attr">value</span>=<span class="str">"opcion1"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"hidden"</span>   <span class="attr">value</span>=<span class="str">"valor-oculto"</span><span class="tag">&gt;</span>
+
+  <span class="cm">&lt;!-- Área de texto grande --&gt;</span>
+  <span class="tag">&lt;textarea</span> <span class="attr">rows</span>=<span class="str">"5"</span> <span class="attr">cols</span>=<span class="str">"30"</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+
+  <span class="cm">&lt;!-- Selector dropdown --&gt;</span>
+  <span class="tag">&lt;select</span> <span class="attr">name</span>=<span class="str">"ciudad"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">""</span><span class="tag">&gt;</span>Selecciona...<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">"bog"</span> <span class="attr">selected</span><span class="tag">&gt;</span>Bogotá<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">"med"</span><span class="tag">&gt;</span>Medellín<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;optgroup</span> <span class="attr">label</span>=<span class="str">"Costa"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="str">"baq"</span><span class="tag">&gt;</span>Barranquilla<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;/optgroup&gt;</span>
+  <span class="tag">&lt;/select&gt;</span>
+
+  <span class="cm">&lt;!-- Botones --&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="str">"submit"</span><span class="tag">&gt;</span>Enviar formulario<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="str">"reset"</span><span class="tag">&gt;</span>Limpiar todo<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="str">"button"</span><span class="tag">&gt;</span>Botón genérico (JS)<span class="tag">&lt;/button&gt;</span>
+
+<span class="tag">&lt;/form&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="topic" id="html-atributos">
+      <h2>Atributos clave</h2>
+      <div class="code-wrap">
+        <div class="code-label">Atributos globales y de datos</div>
+        <pre><span class="cm">&lt;!-- class e id —los más importantes para CSS/JS --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="str">"unico"</span> <span class="attr">class</span>=<span class="str">"tarjeta activa grande"</span><span class="tag">&gt;&lt;/div&gt;</span>
+
+<span class="cm">&lt;!-- data-* — guarda datos personalizados accesibles desde JS --&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">data-id</span>=<span class="str">"42"</span> <span class="attr">data-color</span>=<span class="str">"azul"</span><span class="tag">&gt;</span>Ver producto<span class="tag">&lt;/button&gt;</span>
+
+<span class="cm">&lt;!-- Acceder desde JS --&gt;</span>
+<span class="cm">&lt;!-- btn.dataset.id → "42" --&gt;</span>
+<span class="cm">&lt;!-- btn.dataset.color → "azul" --&gt;</span>
+
+<span class="cm">&lt;!-- Accesibilidad --&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">aria-label</span>=<span class="str">"Cerrar menú"</span><span class="tag">&gt;</span>✕<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">role</span>=<span class="str">"dialog"</span> <span class="attr">aria-modal</span>=<span class="str">"true"</span><span class="tag">&gt;&lt;/div&gt;</span>
+
+<span class="cm">&lt;!-- Otros atributos globales --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">title</span>=<span class="str">"Tooltip al pasar el mouse"</span><span class="tag">&gt;&lt;/div&gt;</span>
+<span class="tag">&lt;p</span>   <span class="attr">hidden</span><span class="tag">&gt;</span>Elemento oculto<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">disabled</span><span class="tag">&gt;</span>               <span class="cm">&lt;!-- no interactuable --&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">readonly</span><span class="tag">&gt;</span>               <span class="cm">&lt;!-- solo lectura --&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">autofocus</span><span class="tag">&gt;</span>              <span class="cm">&lt;!-- foco automático --&gt;</span>
+<span class="tag">&lt;div</span>   <span class="attr">contenteditable</span>=<span class="str">"true"</span><span class="tag">&gt;</span>Texto editable<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span>   <span class="attr">draggable</span>=<span class="str">"true"</span><span class="tag">&gt;</span>Arrastrable<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span>   <span class="attr">tabindex</span>=<span class="str">"0"</span><span class="tag">&gt;</span>Navigable con teclado<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+    </div>
+
+    <div class="topic" id="html-tablas">
+      <h2>Tablas</h2>
+      <div class="code-wrap">
+        <div class="code-label">Estructura de una tabla</div>
+        <pre><span class="tag">&lt;table&gt;</span>
+  <span class="tag">&lt;thead&gt;</span>                          <span class="cm">&lt;!-- encabezado --&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>                            <span class="cm">&lt;!-- fila --&gt;</span>
+      <span class="tag">&lt;th</span> <span class="attr">scope</span>=<span class="str">"col"</span><span class="tag">&gt;</span>Nombre<span class="tag">&lt;/th&gt;</span>  <span class="cm">&lt;!-- celda de encabezado --&gt;</span>
+      <span class="tag">&lt;th</span> <span class="attr">scope</span>=<span class="str">"col"</span><span class="tag">&gt;</span>Edad<span class="tag">&lt;/th&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/thead&gt;</span>
+  <span class="tag">&lt;tbody&gt;</span>                          <span class="cm">&lt;!-- cuerpo --&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>Melissa<span class="tag">&lt;/td&gt;</span>              <span class="cm">&lt;!-- celda de datos --&gt;</span>
+      <span class="tag">&lt;td&gt;</span>25<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td</span> <span class="attr">colspan</span>=<span class="str">"2"</span><span class="tag">&gt;</span>Fusiona 2 columnas<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tbody&gt;</span>
+  <span class="tag">&lt;tfoot&gt;</span>                          <span class="cm">&lt;!-- pie de tabla --&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>Total<span class="tag">&lt;/td&gt;</span>
+      <span class="tag">&lt;td&gt;</span>1<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tfoot&gt;</span>
+<span class="tag">&lt;/table&gt;</span></pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════
+       CAPÍTULO 4: JAVASCRIPT + CSS
+  ══════════════════════════════ -->
+  <div class="chapter" id="cap-js">
+    <div class="chapter-header">
+      <div class="chapter-icon icon-js">⚡</div>
+      <div>
+        <h1>JavaScript con CSS y HTML</h1>
+        <p>Cómo conectar JS para manipular estilos y el DOM dinámicamente</p>
+      </div>
+    </div>
+
+    <div class="topic" id="js-seleccionar">
+      <h2>Seleccionar elementos del DOM</h2>
+      <p>Antes de modificar cualquier elemento, necesitas seleccionarlo. Estas son las formas principales:</p>
+      <div class="code-wrap">
+        <div class="code-label">Métodos de selección</div>
+        <pre><span class="cm">// Por ID — devuelve un solo elemento</span>
+<span class="kw">const</span> boton = document.<span class="fn">getElementById</span>(<span class="str">'mi-boton'</span>);
+
+<span class="cm">// Por selector CSS — devuelve el PRIMERO que coincide</span>
+<span class="kw">const</span> tarjeta  = document.<span class="fn">querySelector</span>(<span class="str">'.tarjeta'</span>);
+<span class="kw">const</span> titulo   = document.<span class="fn">querySelector</span>(<span class="str">'h1'</span>);
+<span class="kw">const</span> activo   = document.<span class="fn">querySelector</span>(<span class="str">'#menu .activo'</span>);
+
+<span class="cm">// Por selector CSS — devuelve TODOS los que coinciden (NodeList)</span>
+<span class="kw">const</span> botones  = document.<span class="fn">querySelectorAll</span>(<span class="str">'.btn'</span>);
+<span class="kw">const</span> inputs   = document.<span class="fn">querySelectorAll</span>(<span class="str">'input[type="text"]'</span>);
+
+<span class="cm">// Iterar sobre todos</span>
+botones.<span class="fn">forEach</span>(btn => {
+  btn.style.color = <span class="str">'red'</span>;
+});
+
+<span class="cm">// Seleccionar dentro de otro elemento</span>
+<span class="kw">const</span> menu   = document.<span class="fn">getElementById</span>(<span class="str">'menu'</span>);
+<span class="kw">const</span> primer = menu.<span class="fn">querySelector</span>(<span class="str">'li'</span>); <span class="cm">// solo busca dentro de #menu</span>
+
+<span class="cm">// Navegar por el DOM</span>
+elemento.<span class="prop">parentElement</span>         <span class="cm">// elemento padre</span>
+elemento.<span class="prop">children</span>              <span class="cm">// hijos directos</span>
+elemento.<span class="prop">nextElementSibling</span>    <span class="cm">// siguiente hermano</span>
+elemento.<span class="prop">previousElementSibling</span> <span class="cm">// hermano anterior</span>
+elemento.<span class="prop">firstElementChild</span>     <span class="cm">// primer hijo</span></pre>
+      </div>
+    </div>
+
+    <div class="topic" id="js-estilos">
+      <h2>Cambiar estilos con JavaScript</h2>
+      <div class="code-wrap">
+        <div class="code-label">Modificar estilos inline desde JS</div>
+        <pre><span class="kw">const</span> caja = document.<span class="fn">querySelector</span>(<span class="str">'.caja'</span>);
+
+<span class="cm">// Cambiar propiedades CSS (camelCase en JS, no kebab-case)</span>
+caja.style.<span class="prop">color</span> = <span class="str">'red'</span>;
+caja.style.<span class="prop">backgroundColor</span> = <span class="str">'#f0f0f0'</span>;  <span class="cm">// background-color → backgroundColor</span>
+caja.style.<span class="prop">fontSize</span> = <span class="str">'20px'</span>;             <span class="cm">// font-size → fontSize</span>
+caja.style.<span class="prop">borderRadius</span> = <span class="str">'8px'</span>;
+caja.style.<span class="prop">display</span> = <span class="str">'none'</span>;             <span class="cm">// ocultar</span>
+caja.style.<span class="prop">display</span> = <span class="str">'block'</span>;            <span class="cm">// mostrar</span>
+caja.style.<span class="prop">transform</span> = <span class="str">'rotate(45deg)'</span>;
+
+<span class="cm">// Leer estilos computados (los que realmente aplican)</span>
+<span class="kw">const</span> estilosActuales = <span class="fn">getComputedStyle</span>(caja);
+<span class="kw">const</span> colorActual = estilosActuales.<span class="fn">getPropertyValue</span>(<span class="str">'color'</span>);
+<span class="kw">const</span> tamActual   = estilosActuales.<span class="fn">getPropertyValue</span>(<span class="str">'font-size'</span>);</pre>
+      </div>
+      <div class="warn">⚠️ Cambiar <code>style.propiedad</code> agrega estilos inline, lo que tiene alta especificidad y es difícil de mantener. La mejor práctica es usar clases CSS.</div>
+    </div>
+
+    <div class="topic" id="js-clases">
+      <h2>classList — la forma correcta de cambiar estilos</h2>
+      <div class="code-wrap">
+        <div class="code-label">Métodos de classList</div>
+        <pre><span class="kw">const</span> el = document.<span class="fn">querySelector</span>(<span class="str">'.caja'</span>);
+
+<span class="cm">// Agregar clase</span>
+el.<span class="prop">classList</span>.<span class="fn">add</span>(<span class="str">'activo'</span>);
+el.<span class="prop">classList</span>.<span class="fn">add</span>(<span class="str">'grande'</span>, <span class="str">'azul'</span>);     <span class="cm">// múltiples a la vez</span>
+
+<span class="cm">// Quitar clase</span>
+el.<span class="prop">classList</span>.<span class="fn">remove</span>(<span class="str">'activo'</span>);
+
+<span class="cm">// Toggle — agrega si no tiene, quita si tiene</span>
+el.<span class="prop">classList</span>.<span class="fn">toggle</span>(<span class="str">'activo'</span>);           <span class="cm">// ideal para botones on/off</span>
+el.<span class="prop">classList</span>.<span class="fn">toggle</span>(<span class="str">'oscuro'</span>, condicion); <span class="cm">// agrega si condicion es true</span>
+
+<span class="cm">// Verificar si tiene una clase</span>
+<span class="kw">const</span> tieneClase = el.<span class="prop">classList</span>.<span class="fn">contains</span>(<span class="str">'activo'</span>); <span class="cm">// true/false</span>
+
+<span class="cm">// Reemplazar una clase por otra</span>
+el.<span class="prop">classList</span>.<span class="fn">replace</span>(<span class="str">'rojo'</span>, <span class="str">'verde'</span>);
+
+<span class="cm">// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Ejemplo: Dark mode toggle</span>
+<span class="kw">const</span> btnTheme = document.<span class="fn">getElementById</span>(<span class="str">'btn-theme'</span>);
+btnTheme.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () => {
+  document.<span class="prop">body</span>.<span class="prop">classList</span>.<span class="fn">toggle</span>(<span class="str">'dark-mode'</span>);
+});</pre>
+      </div>
+
+      <!-- DEMO INTERACTIVO -->
+      <div class="demo">
+        <div class="demo-title">🎮 Pruébalo: classList en acción</div>
+        <div class="js-playground">
+          <div class="js-btns">
+            <button class="js-btn" onclick="demoClassList('add')">classList.add('activo')</button>
+            <button class="js-btn" onclick="demoClassList('remove')">classList.remove('activo')</button>
+            <button class="js-btn" onclick="demoClassList('toggle')">classList.toggle('activo')</button>
+          </div>
+          <div id="demo-target">Soy el elemento &lt;div&gt; objetivo</div>
+          <div class="js-output" id="demo-output">→ Presiona un botón para ver el efecto</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="js-eventos">
+      <h2>Eventos — addEventListener</h2>
+      <div class="code-wrap">
+        <div class="code-label">Tipos de eventos y cómo usarlos</div>
+        <pre><span class="kw">const</span> btn = document.<span class="fn">querySelector</span>(<span class="str">'button'</span>);
+<span class="kw">const</span> input = document.<span class="fn">querySelector</span>(<span class="str">'input'</span>);
+
+<span class="cm">// MOUSE</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">'click'</span>,      e => { ... });  <span class="cm">// clic</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">'dblclick'</span>,   e => { ... });  <span class="cm">// doble clic</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">'mouseover'</span>,  e => { ... });  <span class="cm">// mouse encima</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">'mouseout'</span>,   e => { ... });  <span class="cm">// mouse sale</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">'mousedown'</span>,  e => { ... });  <span class="cm">// botón presionado</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">'mouseup'</span>,    e => { ... });  <span class="cm">// botón soltado</span>
+
+<span class="cm">// TECLADO</span>
+input.<span class="fn">addEventListener</span>(<span class="str">'keydown'</span>,   e => {
+  console.<span class="fn">log</span>(e.key);           <span class="cm">// tecla presionada: 'Enter', 'a', etc</span>
+  <span class="kw">if</span> (e.key === <span class="str">'Enter'</span>) <span class="fn">enviar</span>();
+});
+input.<span class="fn">addEventListener</span>(<span class="str">'keyup'</span>,     e => { ... }); <span class="cm">// al soltar</span>
+
+<span class="cm">// FORMULARIO</span>
+input.<span class="fn">addEventListener</span>(<span class="str">'input'</span>, e => {
+  console.<span class="fn">log</span>(e.target.value);  <span class="cm">// valor actual mientras escribe</span>
+});
+input.<span class="fn">addEventListener</span>(<span class="str">'change'</span>, e => { ... }); <span class="cm">// al perder foco con cambio</span>
+input.<span class="fn">addEventListener</span>(<span class="str">'focus'</span>,  e => { ... }); <span class="cm">// al hacer clic en el input</span>
+input.<span class="fn">addEventListener</span>(<span class="str">'blur'</span>,   e => { ... }); <span class="cm">// al perder foco</span>
+form.<span class="fn">addEventListener</span>(<span class="str">'submit'</span>, e => {
+  e.<span class="fn">preventDefault</span>();             <span class="cm">// evitar recarga de página</span>
+});
+
+<span class="cm">// VENTANA</span>
+window.<span class="fn">addEventListener</span>(<span class="str">'resize'</span>, () => {
+  console.<span class="fn">log</span>(window.<span class="prop">innerWidth</span>, window.<span class="prop">innerHeight</span>);
+});
+window.<span class="fn">addEventListener</span>(<span class="str">'scroll'</span>, () => {
+  console.<span class="fn">log</span>(window.<span class="prop">scrollY</span>);  <span class="cm">// posición vertical del scroll</span>
+});
+window.<span class="fn">addEventListener</span>(<span class="str">'load'</span>, () => { ... });    <span class="cm">// página completamente cargada</span>
+document.<span class="fn">addEventListener</span>(<span class="str">'DOMContentLoaded'</span>, () => { ... }); <span class="cm">// DOM listo</span>
+
+<span class="cm">// El objeto Event (e)</span>
+btn.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, e => {
+  e.<span class="fn">preventDefault</span>();          <span class="cm">// cancela el comportamiento por defecto</span>
+  e.<span class="fn">stopPropagation</span>();         <span class="cm">// detiene la propagación del evento</span>
+  console.<span class="fn">log</span>(e.<span class="prop">target</span>);       <span class="cm">// el elemento que disparó el evento</span>
+  console.<span class="fn">log</span>(e.<span class="prop">currentTarget</span>); <span class="cm">// el elemento al que está enlazado</span>
+  console.<span class="fn">log</span>(e.<span class="prop">clientX</span>, e.<span class="prop">clientY</span>); <span class="cm">// posición del mouse</span>
+});</pre>
+      </div>
+
+      <!-- Demo de eventos -->
+      <div class="demo">
+        <div class="demo-title">🎮 Pruébalo: evento 'input'</div>
+        <div class="js-playground">
+          <label>Escribe algo aquí:</label>
+          <input type="text" id="demo-input" placeholder="Empieza a escribir...">
+          <div class="js-output" id="demo-input-output">→ Esperando input...</div>
+          <div style="margin-top:8px;">
+            <div class="progress-demo">
+              <div class="progress-bar" id="demo-progress" style="width:0%">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="js-dom">
+      <h2>Crear y manipular elementos del DOM</h2>
+      <div class="code-wrap">
+        <div class="code-label">Crear, insertar y eliminar elementos</div>
+        <pre><span class="cm">// Crear elemento</span>
+<span class="kw">const</span> parrafo = document.<span class="fn">createElement</span>(<span class="str">'p'</span>);
+parrafo.<span class="prop">textContent</span> = <span class="str">'Texto del párrafo'</span>;
+parrafo.<span class="prop">className</span> = <span class="str">'mensaje'</span>;
+parrafo.<span class="prop">id</span> = <span class="str">'parrafo-1'</span>;
+
+<span class="cm">// Agregar al DOM</span>
+document.<span class="prop">body</span>.<span class="fn">appendChild</span>(parrafo);         <span class="cm">// al final del body</span>
+contenedor.<span class="fn">appendChild</span>(parrafo);            <span class="cm">// al final del contenedor</span>
+contenedor.<span class="fn">prepend</span>(parrafo);               <span class="cm">// al inicio</span>
+contenedor.<span class="fn">insertBefore</span>(parrafo, referencia); <span class="cm">// antes de otro elemento</span>
+
+<span class="cm">// Leer y cambiar contenido</span>
+el.<span class="prop">textContent</span> = <span class="str">'Solo texto (seguro)'</span>;
+el.<span class="prop">innerHTML</span> = <span class="str">'&lt;strong&gt;HTML aquí&lt;/strong&gt;'</span>; <span class="cm">// ⚠️ cuidado con XSS</span>
+el.<span class="prop">value</span> = <span class="str">'valor de input'</span>;              <span class="cm">// para inputs</span>
+
+<span class="cm">// Atributos</span>
+el.<span class="fn">setAttribute</span>(<span class="str">'href'</span>, <span class="str">'https://...'</span>);
+el.<span class="fn">getAttribute</span>(<span class="str">'href'</span>);
+el.<span class="fn">removeAttribute</span>(<span class="str">'disabled'</span>);
+el.<span class="prop">dataset</span>.<span class="prop">userId</span> = <span class="str">'42'</span>;               <span class="cm">// data-user-id="42"</span>
+
+<span class="cm">// Eliminar</span>
+el.<span class="fn">remove</span>();                              <span class="cm">// elimina el elemento</span>
+contenedor.<span class="fn">removeChild</span>(hijo);             <span class="cm">// elimina un hijo específico</span>
+contenedor.<span class="prop">innerHTML</span> = <span class="str">''</span>;               <span class="cm">// limpia todos los hijos</span>
+
+<span class="cm">// Clonar</span>
+<span class="kw">const</span> copia = el.<span class="fn">cloneNode</span>(<span class="kw">true</span>);          <span class="cm">// true = copia hijos también</span></pre>
+      </div>
+
+      <!-- Demo crear elementos -->
+      <div class="demo">
+        <div class="demo-title">🎮 Pruébalo: crear elementos dinámicamente</div>
+        <div class="js-playground">
+          <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+            <button class="js-btn" onclick="addDemoItem()">+ Agregar tag</button>
+            <button class="js-btn" onclick="document.getElementById('demo-list').innerHTML=''; demoCount=0;">Limpiar</button>
+          </div>
+          <div id="demo-list" style="display:flex; gap:8px; flex-wrap:wrap; min-height:40px;"></div>
+          <div class="js-output" id="demo-list-output">→ Haz clic en "+ Agregar tag"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic" id="js-variables-css">
+      <h2>Variables CSS desde JavaScript</h2>
+      <div class="code-wrap">
+        <div class="code-label">Leer y escribir variables CSS con JS</div>
+        <pre><span class="cm">// ── LEER una variable CSS ──</span>
+<span class="kw">const</span> root   = document.<span class="prop">documentElement</span>;
+<span class="kw">const</span> estilos = <span class="fn">getComputedStyle</span>(root);
+<span class="kw">const</span> color = estilos.<span class="fn">getPropertyValue</span>(<span class="str">'--color-primario'</span>).trim();
+console.<span class="fn">log</span>(color); <span class="cm">// "#534AB7"</span>
+
+<span class="cm">// ── CAMBIAR una variable CSS ──</span>
+<span class="cm">// Esto afecta TODA la página porque se cambia en :root</span>
+root.style.<span class="fn">setProperty</span>(<span class="str">'--color-primario'</span>, <span class="str">'#FF6B6B'</span>);
+root.style.<span class="fn">setProperty</span>(<span class="str">'--fondo'</span>, <span class="str">'#1a1a2e'</span>);
+
+<span class="cm">// ── Ejemplo real: Dark Mode ──</span>
+<span class="kw">function</span> <span class="fn">toggleDarkMode</span>() {
+  <span class="kw">const</span> isDark = document.<span class="prop">body</span>.<span class="prop">classList</span>.<span class="fn">toggle</span>(<span class="str">'dark'</span>);
+
+  root.style.<span class="fn">setProperty</span>(
+    <span class="str">'--bg'</span>,
+    isDark ? <span class="str">'#1a1a2e'</span> : <span class="str">'#ffffff'</span>
+  );
+  root.style.<span class="fn">setProperty</span>(
+    <span class="str">'--texto'</span>,
+    isDark ? <span class="str">'#e0ddff'</span> : <span class="str">'#1a1830'</span>
+  );
+
+  <span class="cm">// Guardar preferencia</span>
+  localStorage.<span class="fn">setItem</span>(<span class="str">'tema'</span>, isDark ? <span class="str">'dark'</span> : <span class="str">'light'</span>);
+}
+
+<span class="cm">// ── Ejemplo: Tema dinámico con slider ──</span>
+<span class="kw">const</span> slider = document.<span class="fn">getElementById</span>(<span class="str">'hue-slider'</span>);
+slider.<span class="fn">addEventListener</span>(<span class="str">'input'</span>, e => {
+  <span class="kw">const</span> hue = e.target.value;
+  root.style.<span class="fn">setProperty</span>(<span class="str">'--color-primario'</span>, <span class="str">`hsl(${hue}, 70%, 50%)`</span>);
+});</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">Patrón completo: app con tema dinámico</div>
+        <pre><span class="cm">// CSS:</span>
+<span class="prop">:root</span> {
+  <span class="prop">--hue</span>: <span class="val">244</span>;
+  <span class="prop">--color-primario</span>: <span class="val">hsl(var(--hue), 70%, 55%)</span>;
+  <span class="prop">--color-claro</span>:    <span class="val">hsl(var(--hue), 70%, 95%)</span>;
+}
+
+<span class="cm">// JS:</span>
+document.<span class="fn">getElementById</span>(<span class="str">'slider'</span>).<span class="fn">addEventListener</span>(<span class="str">'input'</span>, e => {
+  <span class="cm">// Cambiar solo el hue actualiza automáticamente TODOS los colores</span>
+  document.<span class="prop">documentElement</span>.style.<span class="fn">setProperty</span>(<span class="str">'--hue'</span>, e.target.value);
+});</pre>
+      </div>
+
+      <div class="tip">💡 Esta técnica es muy poderosa para construir sistemas de diseño: cambias una variable y toda la paleta se actualiza automáticamente. Es la base de los temas personalizables.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="margin-top:4rem; padding:2rem; background:var(--purple-light); border-radius:16px; text-align:center;">
+    <div style="font-size:24px; margin-bottom:8px;">🎉</div>
+    <div style="font-weight:700; font-size:18px; color:var(--purple);">¡Completaste la guía!</div>
+    <div style="color:var(--text-muted); font-size:14px; margin-top:6px;">CSS · Flexbox · HTML · JavaScript</div>
+  </div>
+
+</main>
+
+<script>
+  // ── Sidebar active link ──
+  const links = document.querySelectorAll('#sidebar a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`#sidebar a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  document.querySelectorAll('.topic').forEach(t => observer.observe(t));
+
+  // ── Demo classList ──
+  const demoTarget = document.getElementById('demo-target');
+  const demoOutput = document.getElementById('demo-output');
+
+  function demoClassList(action) {
+    demoTarget.classList[action]('active-state');
+    const has = demoTarget.classList.contains('active-state');
+    const msgs = {
+      add:    has ? '✅ .add("activo") — clase agregada. Ahora tiene: class="active-state"' : '⚠️ Ya tenía la clase.',
+      remove: !has ? '✅ .remove("activo") — clase eliminada. Ahora: class=""' : '⚠️ No tenía esa clase.',
+      toggle: has ? '✅ .toggle() — clase AGREGADA (no la tenía)' : '✅ .toggle() — clase REMOVIDA (la tenía)'
+    };
+    demoOutput.textContent = '→ ' + msgs[action];
+  }
+
+  // ── Demo input evento ──
+  const demoInput = document.getElementById('demo-input');
+  const demoInputOutput = document.getElementById('demo-input-output');
+  const demoProgress = document.getElementById('demo-progress');
+
+  demoInput.addEventListener('input', e => {
+    const val = e.target.value;
+    const len = val.length;
+    const pct = Math.min(100, len * 5);
+    demoInputOutput.textContent = `→ e.target.value = "${val}" | largo: ${len} | keystrokes: ${len}`;
+    demoProgress.style.width = pct + '%';
+    demoProgress.textContent = pct + '%';
+  });
+
+  // ── Demo crear elementos ──
+  const colors = [
+    ['#AFA9EC','#26215C'], ['#5DCAA5','#04342C'],
+    ['#F0997B','#4A1B0C'], ['#FAC775','#412402'],
+    ['#85B7EB','#042C53'], ['#EAF3DE','#173404']
+  ];
+  let demoCount = 0;
+  const palabras = ['HTML','CSS','flex','div','class','id','padding','margin','border','color','font','display','grid','var()','px','rem','vh'];
+
+  function addDemoItem() {
+    const list = document.getElementById('demo-list');
+    const output = document.getElementById('demo-list-output');
+    const idx = demoCount % colors.length;
+    const [bg, col] = colors[idx];
+    const word = palabras[demoCount % palabras.length];
+
+    const el = document.createElement('span');
+    el.textContent = word;
+    el.style.cssText = `background:${bg}; color:${col}; padding:5px 14px; border-radius:20px; font-size:13px; font-weight:700; cursor:pointer; display:inline-block;`;
+    el.title = 'Haz clic para eliminar';
+    el.addEventListener('click', () => {
+      el.remove();
+      output.textContent = `→ "${word}" eliminado con el.remove()`;
+    });
+    list.appendChild(el);
+    demoCount++;
+    output.textContent = `→ document.createElement('span') — "${word}" agregado al DOM. Total: ${list.children.length} elementos.`;
+  }
+</script>
+</body>
+</html>
