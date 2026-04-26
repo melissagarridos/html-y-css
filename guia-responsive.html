@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía: Diseño Responsive & Media Queries</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: #2a2a3d;
+      --accent: #7c5cfc;
+      --accent2: #fc5c7d;
+      --accent3: #5cfcb4;
+      --text: #e8e8f0;
+      --text-muted: #888899;
+      --code-bg: #0d0d16;
+      --radius: 12px;
+      --font-display: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-display);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      max-width: 800px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero h1 .stroke {
+      -webkit-text-stroke: 1px var(--text);
+      color: transparent;
+    }
+
+    .hero-sub {
+      margin-top: 24px;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      font-weight: 400;
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .badge.accent { border-color: var(--accent); color: var(--accent); }
+    .badge.accent2 { border-color: var(--accent2); color: var(--accent2); }
+    .badge.accent3 { border-color: var(--accent3); color: var(--accent3); }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin: 0 60px 60px;
+    }
+
+    .toc h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      margin-bottom: 20px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .toc a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .toc a:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .toc-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      min-width: 24px;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      padding: 0 60px 100px;
+      max-width: 1100px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(124,92,252,0.1);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .section h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 20px;
+      max-width: 680px;
+    }
+
+    .section p strong {
+      color: var(--text);
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #28c840; }
+
+    pre {
+      padding: 24px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .kw { color: #fc5c7d; }       /* keywords: @media, max-width */
+    .prop { color: #7c5cfc; }     /* properties */
+    .val { color: #5cfcb4; }      /* values */
+    .num { color: #fcb45c; }      /* numbers */
+    .comment { color: #555566; font-style: italic; }
+    .sel { color: #e8e8f0; }      /* selectors */
+    .str { color: #5cfcb4; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      display: flex;
+      gap: 16px;
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      margin: 24px 0;
+      font-size: 0.95rem;
+    }
+
+    .callout-info {
+      background: rgba(124,92,252,0.08);
+      border: 1px solid rgba(124,92,252,0.25);
+    }
+
+    .callout-tip {
+      background: rgba(92,252,180,0.06);
+      border: 1px solid rgba(92,252,180,0.2);
+      color: var(--accent3);
+    }
+
+    .callout-warn {
+      background: rgba(252,180,92,0.06);
+      border: 1px solid rgba(252,180,92,0.2);
+      color: #fcb45c;
+    }
+
+    .callout-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .callout p { margin: 0; color: inherit; font-size: 0.9rem; }
+    .callout strong { color: inherit; }
+
+    /* ── BREAKPOINTS TABLE ── */
+    .bp-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .bp-card {
+      background: var(--surface);
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .bp-icon { font-size: 2rem; margin-bottom: 12px; }
+
+    .bp-name {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .bp-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .bp-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ── COMPARISON ── */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .compare-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .compare-label {
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .bad .compare-label { background: rgba(252,92,125,0.15); color: var(--accent2); }
+    .good .compare-label { background: rgba(92,252,180,0.1); color: var(--accent3); }
+
+    .compare-card pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-top: none;
+      margin: 0;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    /* ── LIVE DEMO ── */
+    .demo-container {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .demo-toolbar {
+      background: var(--surface2);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .demo-toolbar span {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .resize-btns {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .resize-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .resize-btn:hover, .resize-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .demo-frame {
+      background: #fff;
+      transition: width 0.4s ease;
+      margin: 0 auto;
+    }
+
+    .demo-inner {
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .demo-nav {
+      display: flex;
+      gap: 16px;
+      background: #7c5cfc;
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+
+    .demo-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .demo-card {
+      background: #f3f0ff;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .demo-card h3 {
+      color: #7c5cfc;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    /* ── CLAMP VISUAL ── */
+    .clamp-visual {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin: 24px 0;
+    }
+
+    .clamp-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .clamp-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      min-width: 80px;
+    }
+
+    .clamp-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .clamp-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .clamp-value {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .checklist li:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .checklist li::before {
+      content: '✓';
+      color: var(--accent3);
+      font-weight: bold;
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+    }
+
+    /* ── PROPERTY TABLE ── */
+    .prop-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.875rem;
+    }
+
+    .prop-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .prop-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .prop-table tr:last-child td { border-bottom: none; }
+
+    .prop-table tr:hover td { background: var(--surface); }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .tag-purple { background: rgba(124,92,252,0.15); color: var(--accent); }
+    .tag-pink { background: rgba(252,92,125,0.15); color: var(--accent2); }
+    .tag-green { background: rgba(92,252,180,0.1); color: var(--accent3); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 60px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    footer span { color: var(--accent); }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .section:nth-child(1) { animation-delay: 0.1s; }
+    .section:nth-child(2) { animation-delay: 0.15s; }
+    .section:nth-child(3) { animation-delay: 0.2s; }
+    .section:nth-child(4) { animation-delay: 0.25s; }
+    .section:nth-child(5) { animation-delay: 0.3s; }
+    .section:nth-child(6) { animation-delay: 0.35s; }
+    .section:nth-child(7) { animation-delay: 0.4s; }
+
+    /* ── RESPONSIVE (meta-ironic) ── */
+    @media (max-width: 900px) {
+      .hero, main { padding-left: 30px; padding-right: 30px; }
+      .toc { margin-left: 30px; margin-right: 30px; }
+      .toc-grid { grid-template-columns: repeat(2, 1fr); }
+      .bp-grid { grid-template-columns: repeat(2, 1fr); }
+      .compare { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .hero, main { padding-left: 20px; padding-right: 20px; }
+      .toc { margin-left: 20px; margin-right: 20px; }
+      .toc-grid { grid-template-columns: 1fr; }
+      .bp-grid { grid-template-columns: 1fr 1fr; }
+      .resize-btns { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">Guía completa</div>
+    <h1>
+      <em>Responsive</em> Design<br>
+      & <span class="stroke">Media Queries</span>
+    </h1>
+    <p class="hero-sub">Todo lo que necesitas saber para que tu sitio web se vea perfecto en cualquier pantalla, desde cero.</p>
+    <div class="hero-badges">
+      <span class="badge accent">CSS3</span>
+      <span class="badge accent2">@media</span>
+      <span class="badge accent3">Flexbox & Grid</span>
+      <span class="badge">clamp()</span>
+      <span class="badge">Mobile First</span>
+    </div>
+  </section>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h2>// Contenido</h2>
+    <div class="toc-grid">
+      <a href="#s1"><span class="toc-num">01</span> ¿Qué es responsive design?</a>
+      <a href="#s2"><span class="toc-num">02</span> La etiqueta viewport</a>
+      <a href="#s3"><span class="toc-num">03</span> Sintaxis de @media</a>
+      <a href="#s4"><span class="toc-num">04</span> Breakpoints comunes</a>
+      <a href="#s5"><span class="toc-num">05</span> Mobile First vs Desktop First</a>
+      <a href="#s6"><span class="toc-num">06</span> Unidades relativas</a>
+      <a href="#s7"><span class="toc-num">07</span> Flexbox & Grid responsive</a>
+      <a href="#s8"><span class="toc-num">08</span> La función clamp()</a>
+      <a href="#s9"><span class="toc-num">09</span> Imágenes responsive</a>
+      <a href="#s10"><span class="toc-num">10</span> Checklist final</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- 01 -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>¿Qué es diseño responsive?</h2>
+      </div>
+      <p>Es la técnica de hacer que un sitio web <strong>se adapte automáticamente</strong> al tamaño de la pantalla donde se visualiza — sin hacer páginas separadas para móvil y desktop.</p>
+      <p>Antes se hacían dos versiones del sitio: <code>m.sitio.com</code> para móvil y <code>sitio.com</code> para desktop. Hoy, con CSS, un solo archivo se adapta a todo.</p>
+
+      <div class="bp-grid">
+        <div class="bp-card">
+          <div class="bp-icon">📱</div>
+          <div class="bp-name">Mobile</div>
+          <div class="bp-val">360px</div>
+          <div class="bp-desc">1 columna, menú hamburguesa</div>
+        </div>
+        <div class="bp-card">
+          <div class="bp-icon">📟</div>
+          <div class="bp-name">Tablet</div>
+          <div class="bp-val">768px</div>
+          <div class="bp-desc">2 columnas, nav compacta</div>
+        </div>
+        <div class="bp-card">
+          <div class="bp-icon">💻</div>
+          <div class="bp-name">Laptop</div>
+          <div class="bp-val">1024px</div>
+          <div class="bp-desc">3–4 columnas, layout completo</div>
+        </div>
+        <div class="bp-card">
+          <div class="bp-icon">🖥️</div>
+          <div class="bp-name">Desktop</div>
+          <div class="bp-val">1440px+</div>
+          <div class="bp-desc">Diseño máximo, sidebars</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>La etiqueta viewport — OBLIGATORIA</h2>
+      </div>
+      <p>Esta línea va en el <code>&lt;head&gt;</code> de <strong>todo sitio web responsive</strong>. Sin ella, el móvil simula una pantalla de 980px y todo se ve miniatura.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">index.html</span>
+        </div>
+        <pre><span class="comment">&lt;!-- ✅ Siempre incluye esto en tu &lt;head&gt; --&gt;</span>
+<span class="kw">&lt;meta</span> <span class="prop">name</span>=<span class="str">"viewport"</span> <span class="prop">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="kw">&gt;</span>
+
+<span class="comment">&lt;!-- ¿Qué significa cada parte? --&gt;</span>
+<span class="comment">&lt;!-- width=device-width  → el ancho = el ancho real del dispositivo --&gt;</span>
+<span class="comment">&lt;!-- initial-scale=1.0   → sin zoom al cargar --&gt;</span></pre>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <p>Sin esta meta tag, tus <strong>media queries no funcionarán correctamente</strong> en móviles. Es lo primero que debes verificar si algo falla.</p>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Sintaxis de @media</h2>
+      </div>
+      <p>Un media query se escribe al final de tu CSS y "sobreescribe" las reglas anteriores cuando la condición se cumple.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">style.css — Estructura básica</span>
+        </div>
+        <pre><span class="comment">/* 1. Estilo base (para desktop) */</span>
+<span class="sel">.caja</span> {
+  <span class="prop">width</span>: <span class="val">800px</span>;
+  <span class="prop">font-size</span>: <span class="val">24px</span>;
+  <span class="prop">background</span>: <span class="val">blue</span>;
+}
+
+<span class="comment">/* 2. Media query: se aplica solo si la pantalla ≤ 768px */</span>
+<span class="kw">@media</span> (<span class="prop">max-width</span>: <span class="num">768px</span>) {
+  <span class="sel">.caja</span> {
+    <span class="prop">width</span>: <span class="val">100%</span>;     <span class="comment">/* ahora ocupa todo el ancho */</span>
+    <span class="prop">font-size</span>: <span class="val">16px</span>; <span class="comment">/* letra más pequeña */</span>
+  }
+  <span class="comment">/* solo cambias lo que necesita cambiar */</span>
+  <span class="comment">/* background: blue sigue igual, no lo repites */</span>
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">style.css — Tipos de condiciones</span>
+        </div>
+        <pre><span class="comment">/* max-width: se activa en pantallas MENORES O IGUALES a X */</span>
+<span class="kw">@media</span> (<span class="prop">max-width</span>: <span class="num">768px</span>) { ... }
+
+<span class="comment">/* min-width: se activa en pantallas MAYORES O IGUALES a X */</span>
+<span class="kw">@media</span> (<span class="prop">min-width</span>: <span class="num">1024px</span>) { ... }
+
+<span class="comment">/* rango: entre 600px y 900px */</span>
+<span class="kw">@media</span> (<span class="prop">min-width</span>: <span class="num">600px</span>) <span class="kw">and</span> (<span class="prop">max-width</span>: <span class="num">900px</span>) { ... }
+
+<span class="comment">/* orientación: pantalla horizontal (landscape) */</span>
+<span class="kw">@media</span> (<span class="prop">orientation</span>: <span class="val">landscape</span>) { ... }
+
+<span class="comment">/* preferencia de movimiento reducido (accesibilidad) */</span>
+<span class="kw">@media</span> (<span class="prop">prefers-reduced-motion</span>: <span class="val">reduce</span>) {
+  <span class="sel">*</span> { <span class="prop">animation</span>: <span class="val">none</span> !important; }
+}</pre>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">💡</span>
+        <p><strong>Regla de oro:</strong> los media queries siempre van <strong>al final</strong> de tu archivo CSS, después de todos los estilos base. CSS lee de arriba hacia abajo, así que el último valor gana.</p>
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Breakpoints más usados</h2>
+      </div>
+      <p>Un <strong>breakpoint</strong> es el punto exacto (en píxeles) donde tu diseño "cambia de forma". No hay regla oficial, pero estos son los más comunes:</p>
+
+      <table class="prop-table">
+        <thead>
+          <tr>
+            <th>Breakpoint</th>
+            <th>Dispositivo</th>
+            <th>Uso típico</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>480px</code></td>
+            <td>Teléfonos pequeños</td>
+            <td>1 columna, todo vertical</td>
+            <td><span class="tag tag-pink">small</span></td>
+          </tr>
+          <tr>
+            <td><code>768px</code></td>
+            <td>Tablets / móviles grandes</td>
+            <td>2 columnas, menú colapsado</td>
+            <td><span class="tag tag-purple">mobile</span></td>
+          </tr>
+          <tr>
+            <td><code>1024px</code></td>
+            <td>Tablets grandes / laptops</td>
+            <td>Transición desktop ↔ móvil</td>
+            <td><span class="tag tag-purple">tablet</span></td>
+          </tr>
+          <tr>
+            <td><code>1280px</code></td>
+            <td>Laptops estándar</td>
+            <td>Layout completo</td>
+            <td><span class="tag tag-green">desktop</span></td>
+          </tr>
+          <tr>
+            <td><code>1440px+</code></td>
+            <td>Monitores grandes</td>
+            <td>max-width en contenedor</td>
+            <td><span class="tag tag-green">wide</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">🌿</span>
+        <p><strong>Tip:</strong> no copies estos números mecánicamente. Abre tu sitio, achica la ventana del navegador, y pon el breakpoint <strong>donde el diseño "se rompe"</strong>. Ese es tu breakpoint real.</p>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Mobile First vs Desktop First</h2>
+      </div>
+      <p>Son dos filosofías opuestas. La diferencia está en <strong>cuál es tu CSS base</strong> y qué tipo de media query usas.</p>
+
+      <div class="compare">
+        <div class="compare-card bad">
+          <div class="compare-label">❌ Desktop First (la que ya tienes)</div>
+          <pre><span class="comment">/* base: estilos para desktop */</span>
+<span class="sel">.grid</span> {
+  <span class="prop">grid-template-columns</span>: <span class="val">repeat(4, 1fr)</span>;
+}
+
+<span class="comment">/* luego "achicas" para móvil */</span>
+<span class="kw">@media</span> (<span class="prop">max-width</span>: <span class="num">768px</span>) {
+  <span class="sel">.grid</span> {
+    <span class="prop">grid-template-columns</span>: <span class="val">1fr</span>;
+  }
+}</pre>
+        </div>
+        <div class="compare-card good">
+          <div class="compare-label">✅ Mobile First (recomendado)</div>
+          <pre><span class="comment">/* base: estilos para móvil */</span>
+<span class="sel">.grid</span> {
+  <span class="prop">grid-template-columns</span>: <span class="val">1fr</span>;
+}
+
+<span class="comment">/* luego "expandes" para desktop */</span>
+<span class="kw">@media</span> (<span class="prop">min-width</span>: <span class="num">768px</span>) {
+  <span class="sel">.grid</span> {
+    <span class="prop">grid-template-columns</span>: <span class="val">repeat(4, 1fr)</span>;
+  }
+}</pre>
+        </div>
+      </div>
+
+      <p>Mobile First es el estándar moderno porque más del 60% del tráfico web viene de móviles. Pero para un proyecto personal como el tuyo, Desktop First está perfectamente bien — es más fácil de aprender al inicio.</p>
+    </section>
+
+    <!-- 06 -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Unidades relativas — el secreto del responsive</h2>
+      </div>
+      <p>Usar <code>px</code> fijos es el enemigo del diseño responsive. Estas unidades se adaptan solas:</p>
+
+      <table class="prop-table">
+        <thead>
+          <tr>
+            <th>Unidad</th>
+            <th>Relativa a</th>
+            <th>Ejemplo</th>
+            <th>Uso ideal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-purple">%</span></td>
+            <td>El elemento padre</td>
+            <td><code>width: 80%</code></td>
+            <td>Anchos de contenedores</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-purple">rem</span></td>
+            <td>Font-size del &lt;html&gt; (16px default)</td>
+            <td><code>1rem = 16px</code></td>
+            <td>Tipografía y espaciados</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-purple">em</span></td>
+            <td>Font-size del elemento padre</td>
+            <td><code>1.5em</code></td>
+            <td>Padding relativo al texto</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-pink">vw</span></td>
+            <td>1% del ancho del viewport</td>
+            <td><code>50vw = mitad de pantalla</code></td>
+            <td>Títulos grandes, hero sections</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-pink">vh</span></td>
+            <td>1% del alto del viewport</td>
+            <td><code>100vh = pantalla completa</code></td>
+            <td>Secciones full screen</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">dvh</span></td>
+            <td>Alto dinámico (mobile real)</td>
+            <td><code>100dvh</code></td>
+            <td>Móviles con barra de navegador</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">Ejemplo práctico</span>
+        </div>
+        <pre><span class="comment">/* ❌ Valores fijos — no se adaptan */</span>
+<span class="sel">.titulo</span> { <span class="prop">font-size</span>: <span class="num">80px</span>; }
+<span class="sel">.caja</span>   { <span class="prop">width</span>: <span class="num">1200px</span>; }
+
+<span class="comment">/* ✅ Valores relativos — se adaptan solos */</span>
+<span class="sel">.titulo</span> { <span class="prop">font-size</span>: <span class="num">5vw</span>; }        <span class="comment">/* 5% del ancho de pantalla */</span>
+<span class="sel">.caja</span>   { <span class="prop">max-width</span>: <span class="num">90%</span>; }        <span class="comment">/* nunca más del 90% del padre */</span>
+<span class="sel">.boton</span>  { <span class="prop">padding</span>: <span class="num">0.8rem 1.5rem</span>; } <span class="comment">/* escala con la fuente base */</span></pre>
+      </div>
+    </section>
+
+    <!-- 07 -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Flexbox & Grid — los mejores aliados</h2>
+      </div>
+      <p>Estas dos propiedades de CSS ya tienen comportamiento responsive incorporado.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">Flexbox — wrap automático</span>
+        </div>
+        <pre><span class="sel">.nav</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">flex-wrap</span>: <span class="val">wrap</span>;  <span class="comment">/* si no caben, bajan a la siguiente línea */</span>
+  <span class="prop">gap</span>: <span class="num">16px</span>;
+}
+
+<span class="comment">/* Sin media query, el nav se adapta solo */</span>
+<span class="comment">/* En desktop: todos en una fila */</span>
+<span class="comment">/* En móvil:   se envuelven en 2–3 filas */</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">CSS Grid — auto-fill mágico</span>
+        </div>
+        <pre><span class="sel">.cards</span> {
+  <span class="prop">display</span>: <span class="val">grid</span>;
+  <span class="comment">/* auto-fill: crea tantas columnas como quepan */</span>
+  <span class="comment">/* minmax(250px, 1fr): cada columna mín 250px, máx flexible */</span>
+  <span class="prop">grid-template-columns</span>: <span class="val">repeat(auto-fill, minmax(250px, 1fr))</span>;
+  <span class="prop">gap</span>: <span class="num">16px</span>;
+}
+
+<span class="comment">/* Resultado: */</span>
+<span class="comment">/* Desktop (1200px):  4 columnas automáticamente */</span>
+<span class="comment">/* Tablet  (768px):   3 columnas automáticamente */</span>
+<span class="comment">/* Mobile  (360px):   1 columna automáticamente  */</span>
+<span class="comment">/* ¡Sin ningún media query! */</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">✨</span>
+        <p><strong>Pro tip:</strong> <code>repeat(auto-fill, minmax(250px, 1fr))</code> es probablemente la línea de CSS más poderosa para grids de cards. Apréndetela de memoria.</p>
+      </div>
+    </section>
+
+    <!-- 08 -->
+    <section class="section" id="s8">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2>La función clamp() — tipografía fluida</h2>
+      </div>
+      <p>En vez de cambiar el font-size en cada media query, <code>clamp()</code> lo hace escalar <strong>fluidamente</strong> entre un mínimo y un máximo.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">Sintaxis de clamp()</span>
+        </div>
+        <pre><span class="comment">/*  clamp( MÍNIMO,  IDEAL,  MÁXIMO ) */</span>
+<span class="sel">.titulo</span> {
+  <span class="prop">font-size</span>: <span class="val">clamp</span>(<span class="num">2rem</span>, <span class="num">8vw</span>, <span class="num">5rem</span>);
+}
+
+<span class="comment">/* En mobile  (360px):  2rem  = 32px  ← no baja de aquí */</span>
+<span class="comment">/* En tablet  (600px):  8vw   = 48px  ← escala con la pantalla */</span>
+<span class="comment">/* En desktop (900px):  5rem  = 80px  ← no sube de aquí */</span>
+
+<span class="comment">/* Equivalente SIN clamp (más código, menos elegante): */</span>
+<span class="sel">.titulo</span> { <span class="prop">font-size</span>: <span class="num">5rem</span>; }
+<span class="kw">@media</span> (<span class="prop">max-width</span>: <span class="num">768px</span>) { <span class="sel">.titulo</span> { <span class="prop">font-size</span>: <span class="num">3rem</span>; } }
+<span class="kw">@media</span> (<span class="prop">max-width</span>: <span class="num">480px</span>) { <span class="sel">.titulo</span> { <span class="prop">font-size</span>: <span class="num">2rem</span>; } }</pre>
+      </div>
+
+      <div class="clamp-visual">
+        <p style="font-size:0.8rem; color: var(--text-muted); margin-bottom: 16px; font-family: var(--font-mono);">// Visualización: clamp(2rem, 8vw, 5rem)</p>
+        <div class="clamp-bar">
+          <span class="clamp-label">Mobile</span>
+          <div class="clamp-track"><div class="clamp-fill" style="width:30%"></div></div>
+          <span class="clamp-value">2rem</span>
+        </div>
+        <div class="clamp-bar">
+          <span class="clamp-label">Tablet</span>
+          <div class="clamp-track"><div class="clamp-fill" style="width:60%"></div></div>
+          <span class="clamp-value">~3.5rem</span>
+        </div>
+        <div class="clamp-bar">
+          <span class="clamp-label">Desktop</span>
+          <div class="clamp-track"><div class="clamp-fill" style="width:100%"></div></div>
+          <span class="clamp-value">5rem</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 -->
+    <section class="section" id="s9">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2>Imágenes responsive</h2>
+      </div>
+      <p>Las imágenes con ancho fijo se salen de la pantalla en móvil. La solución es simple:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">Regla base — applica a TODAS las imágenes</span>
+        </div>
+        <pre><span class="comment">/* Pon esto siempre en tu CSS global */</span>
+<span class="sel">img</span> {
+  <span class="prop">max-width</span>: <span class="val">100%</span>;  <span class="comment">/* nunca más ancho que su contenedor */</span>
+  <span class="prop">height</span>: <span class="val">auto</span>;     <span class="comment">/* mantiene la proporción original */</span>
+  <span class="prop">display</span>: <span class="val">block</span>;   <span class="comment">/* elimina el espacio fantasma debajo */</span>
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+          <span class="code-title">object-fit — para imágenes con altura fija</span>
+        </div>
+        <pre><span class="sel">.foto-perfil</span> {
+  <span class="prop">width</span>: <span class="val">300px</span>;
+  <span class="prop">height</span>: <span class="val">300px</span>;
+  <span class="prop">object-fit</span>: <span class="val">cover</span>;   <span class="comment">/* recorta para llenar, sin distorsionar */</span>
+  <span class="prop">border-radius</span>: <span class="val">50%</span>;  <span class="comment">/* círculo */</span>
+}
+
+<span class="comment">/* Valores de object-fit: */</span>
+<span class="comment">/* cover   → rellena el espacio, recorta si es necesario ✅ más usado */</span>
+<span class="comment">/* contain → imagen completa, puede dejar espacios vacíos */</span>
+<span class="comment">/* fill    → distorsiona para llenar el espacio ❌ evitar */</span></pre>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="section" id="s10">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2>Checklist final — antes de publicar</h2>
+      </div>
+      <p>Antes de dar por terminado cualquier sitio, verifica estos puntos:</p>
+
+      <ul class="checklist">
+        <li>Tienes <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> en tu HTML</li>
+        <li>Las imágenes tienen <code>max-width: 100%</code> y <code>height: auto</code></li>
+        <li>No usas anchos fijos en <code>px</code> para contenedores principales (usa <code>%</code>, <code>max-width</code>, o <code>vw</code>)</li>
+        <li>Tus media queries están <strong>al final</strong> del CSS, ordenadas de mayor a menor (si usas Desktop First)</li>
+        <li>Probaste en Chrome DevTools con el modo responsive (F12 → ícono de móvil)</li>
+        <li>El texto es legible sin hacer zoom en móvil (mínimo 14–16px)</li>
+        <li>Los botones son fáciles de tocar en móvil (mínimo 44×44px de área táctil)</li>
+        <li>El header/nav no se sale de la pantalla en 360px de ancho</li>
+        <li>No hay scroll horizontal en ningún breakpoint</li>
+        <li>Usas <code>clamp()</code> o media queries para títulos con font-size muy grandes</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">🛠️</span>
+        <p><strong>Herramienta esencial:</strong> En Chrome, presiona <strong>F12</strong> → haz clic en el ícono de móvil arriba a la izquierda. Puedes simular cualquier dispositivo y ver exactamente cómo se ve tu sitio en cada resolución.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Guía creada para <span>Melissa Garrido</span> · CSS Responsive Design · <span>2025</span></p>
+  </footer>
+
+  <script>
+    // Resize demo buttons
+    document.querySelectorAll('.resize-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.resize-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const frame = document.querySelector('.demo-frame');
+        const size = btn.dataset.size;
+        if (size === 'mobile') {
+          frame.style.width = '375px';
+          frame.querySelector('.demo-grid').style.gridTemplateColumns = '1fr';
+          frame.querySelector('.demo-nav').style.flexDirection = 'column';
+        } else if (size === 'tablet') {
+          frame.style.width = '768px';
+          frame.querySelector('.demo-grid').style.gridTemplateColumns = 'repeat(2, 1fr)';
+          frame.querySelector('.demo-nav').style.flexDirection = 'row';
+        } else {
+          frame.style.width = '100%';
+          frame.querySelector('.demo-grid').style.gridTemplateColumns = 'repeat(3, 1fr)';
+          frame.querySelector('.demo-nav').style.flexDirection = 'row';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
