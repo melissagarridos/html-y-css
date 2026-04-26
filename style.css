@@ -1,0 +1,914 @@
+/* ════════════════════════════════════════════════════════
+   VARIABLES GLOBALES
+   Las variables CSS (custom properties) se declaran en :root
+   para que sean accesibles desde cualquier selector.
+   Se usan con var(--nombre).
+   ════════════════════════════════════════════════════════ */
+:root {
+  --primary: #710014;           /* color principal: rojo oscuro */
+  --primary-light: #F1D27A;     /* versión clara del primario: dorado */
+  --text: #f2f1ed;              /* color de texto principal: blanco cálido */
+  --secondarytext: #A1A1AA;     /* texto secundario: gris */
+  --border: #161616;            /* color de bordes */
+  --bg: #161616;                /* fondo general: negro suave */
+  --accent: #e7c159;            /* color de acento para hovers especiales */
+  --radius: 8px;                /* radio de borde reutilizable */
+  --shadow: 0 8px 20px rgba(181, 127, 228, 0.15);
+  --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  --hovershadow: 20px 50px 50px rgba(181, 127, 228, 0.15);
+}
+
+/* ════════════════════════════════════════════════════════
+   RESET Y BASE
+   ════════════════════════════════════════════════════════ */
+
+/* El selector * aplica a TODOS los elementos */
+* {
+  box-sizing: border-box;
+  /* border-box: el padding y border se cuentan DENTRO del ancho total.
+     Sin esto, padding añade ancho extra y rompe layouts. */
+  font-family: 'Playfair Display', serif;
+}
+
+body {
+  margin: 0;               /* elimina el margen por defecto del navegador */
+  padding: 20px;           /* espacio interior en los 4 lados */
+  padding-top: 70px;       /* sobreescribe solo el top: espacio para el header fijo */
+  color: var(--text);      /* color de texto heredado por todos los hijos */
+  background: var(--bg);
+  width: 100%;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   HEADER
+   ════════════════════════════════════════════════════════ */
+header {
+  position: fixed;
+  /* fixed: el elemento sale del flujo normal y se fija en la ventana.
+     No se mueve al hacer scroll. Requiere top/left para posicionarse. */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  display: flex;           /* activa flexbox: hijos se alinean en fila por defecto */
+  align-items: center;     /* centra hijos verticalmente */
+  justify-content: space-between; /* separa hijos: primero izquierda, último derecha */
+  padding: 0.5rem 1rem;    /* shorthand: vertical horizontal */
+  background: var(--bg);
+}
+
+.festival-name:hover {
+  color: var(--primary-light);
+}
+
+.city {
+  color: var(--text);
+  text-decoration: none;   /* quita el subrayado (útil en <a>) */
+  font-size: clamp(14px, 2.5vw, 20px);
+  /* clamp(mínimo, preferido, máximo)
+     - mínimo: nunca baja de 14px
+     - preferido: 2.5% del ancho del viewport (escala con la pantalla)
+     - máximo: nunca sube de 20px */
+  padding-bottom: 4px;
+}
+
+.city:hover {
+  color: var(--primary-light);
+}
+
+#togglebtn {
+  border: none;            /* elimina el borde nativo del botón */
+  font-size: 1.5rem;       /* 1rem = tamaño base del navegador (normalmente 16px) */
+  background-color: var(--bg);
+  color: var(--text);
+  cursor: pointer;         /* cambia el cursor a mano al hacer hover */
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  /* transition: anima cambios de propiedades CSS.
+     "all" = cualquier propiedad que cambie.
+     0.2s = duración. ease = curva lento→rápido→lento */
+}
+
+#togglebtn:hover {
+  color: var(--primary-light);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SECCIÓN PRINCIPAL (HERO)
+   ════════════════════════════════════════════════════════ */
+.principal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;     /* hijos en fila: texto | imagen */
+  min-height: 100vh;       /* mínimo: altura completa del viewport */
+}
+
+.fotoprincipal {
+  width: 50vw;             /* vw = viewport width. 50vw = mitad de la pantalla */
+  min-height: 100vh;
+  object-fit: cover;       /* la imagen cubre el contenedor sin deformarse */
+  flex-shrink: 0;          /* impide que flex comprima esta imagen */
+}
+
+.textoprincipal {
+  display: flex;
+  flex-direction: column;  /* hijos apilados verticalmente */
+  align-items: flex-start; /* alinea hijos al inicio (izquierda) */
+  flex: 1;
+  /* flex: 1 = este elemento crece para ocupar el espacio restante */
+  max-width: 600px;
+  color: white;
+  padding: 2rem;
+}
+
+.edition {
+  background-color: var(--primary);
+  border: none;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.edition:hover {
+  background-color: var(--primary-light);
+}
+
+.introtitle {
+  font-size: clamp(2rem, 5vw, 4rem); /* escala entre 32px y 64px según pantalla */
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.introtitle:hover {
+  color: var(--accent);
+  transform: translateY(-5px);
+  /* transform: mueve/escala/rota sin afectar el layout.
+     translateY(-5px) sube el elemento 5px */
+}
+
+.description {
+  color: var(--secondarytext);
+}
+
+.btn {
+  display: inline-block;
+  /* inline-block: fluye como texto pero acepta
+     width, height y padding/margin verticales */
+  margin-top: 1rem;
+  margin-right: 12px;      /* espacio entre botones */
+  background-color: var(--primary);
+  text-decoration: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--primary-light);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SCHEDULE (HORARIOS)
+   ════════════════════════════════════════════════════════ */
+.schedule {
+  display: flex;
+  align-items: center;
+  flex-direction: column;  /* todo apilado y centrado */
+  padding: 2rem 0;
+}
+
+.calendar {
+  background-color: var(--primary);
+  border: none;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.calendar:hover {
+  background-color: var(--primary-light);
+}
+
+.horario-tarjetas {
+  display: grid;
+  /* grid: sistema de rejilla 2D (filas y columnas).
+     Más potente que flex para layouts de múltiples columnas. */
+  grid-template-columns: repeat(3, 1fr);
+  /* repeat(3, 1fr): 3 columnas iguales.
+     1fr = 1 fracción del espacio disponible */
+  gap: 20px;               /* espacio entre filas Y columnas */
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.tarjeta {
+  width: 100%;
+  height: 380px;           /* altura fija: necesaria para que height: 75% funcione en .photohorario */
+  display: flex;
+  flex-direction: column;
+  background-color: #1b1b1b;
+  border-radius: 12px;
+  overflow: hidden;        /* recorta lo que salga del border-radius */
+}
+
+.photohorario {
+  width: 100%;
+  height: 75%;             /* funciona porque .tarjeta tiene height fijo */
+  object-fit: cover;
+  border-radius: 14px;
+  transition: transform 0.4s ease, filter 0.4s ease;
+  /* se pueden animar múltiples propiedades separadas por coma */
+}
+
+.tarjeta:hover .photohorario {
+  transform: scale(1.05);  /* zoom 5% */
+  filter: brightness(0.9); /* oscurece ligeramente */
+}
+
+
+/* ════════════════════════════════════════════════════════
+   TABLA DE CHEFS
+   ════════════════════════════════════════════════════════ */
+.chefs {
+  padding: 4rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  /* border-collapse: collapse fusiona los bordes de celdas adyacentes.
+     Sin esto, cada celda tiene su propio borde y se ven dobles. */
+  margin-top: 2rem;
+}
+
+thead tr {
+  border-bottom: 1px solid var(--primary); /* línea roja bajo los encabezados */
+}
+
+th {
+  text-align: left;
+  padding: 12px 16px;
+  color: var(--primary-light);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;  /* espaciado entre letras (em = relativo al font-size) */
+  text-transform: uppercase; /* convierte a mayúsculas sin cambiar el HTML */
+  font-weight: 400;         /* 400 = regular, 700 = bold */
+}
+
+td {
+  padding: 16px;
+  color: var(--secondarytext);
+  border-bottom: 1px solid #222;
+  font-size: 0.95rem;
+}
+
+/* :first-child selecciona el primer hijo de su padre */
+td:first-child {
+  color: var(--text);      /* nombre del chef en blanco */
+  font-style: italic;
+}
+
+tbody tr {
+  transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: #1e1e1e;
+}
+
+tbody tr:hover td {
+  color: var(--text);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════════════════ */
+footer {
+  display: grid;
+  grid-template-columns: auto auto;
+  /* auto: la columna toma el ancho de su contenido */
+  grid-template-areas: "contact links";
+  /* nombra zonas del grid para reordenarlas en media queries */
+  align-items: center;
+  padding-top: 3rem;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;             /* gap en flex: espacio entre hijos */
+}
+
+.email:hover,
+.numero:hover,
+.lugar:hover {
+  color: var(--primary-light);
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;   /* alinea hijos a la derecha */
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* :link = no visitado · :visited = ya visitado */
+.link:link,
+.link:visited {
+  color: var(--secondarytext);
+  text-decoration: none;
+}
+
+.link:hover,
+.link:active {
+  color: var(--primary-light);
+  text-decoration: none;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SIDEBAR
+   ════════════════════════════════════════════════════════ */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  background: black;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  z-index: 999;
+  /* z-index: controla qué elemento queda encima cuando se superponen.
+     Mayor número = más arriba. Solo funciona con position != static */
+  transform: translateX(-100%); /* oculto fuera de la pantalla a la izquierda */
+  transition: transform 0.3s ease;
+  overflow-y: auto;        /* scroll si el contenido es muy largo */
+}
+
+/* .active se agrega/quita desde JavaScript con classList.toggle() */
+#sidebar.active {
+  transform: translateX(0); /* entra a pantalla */
+}
+
+.sidebarbtn {
+  margin-top: 3rem;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.sidebarbtn:hover {
+  color: var(--primary-light);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   FORMULARIO
+   ════════════════════════════════════════════════════════ */
+#form {
+  background: #181818;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Selector de grupo: aplica los mismos estilos a input Y textarea */
+input,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #0f0f0f;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;           /* quita el borde azul nativo al enfocar */
+  transition: border 0.2s ease;
+}
+
+/* :focus se activa cuando el usuario hace click en el input */
+input:focus,
+textarea:focus {
+  border-color: var(--primary);
+}
+
+textarea {
+  resize: none;            /* impide que el usuario redimensione el textarea */
+  min-height: 80px;
+}
+
+.submitbtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitbtn:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px); /* efecto de "levantarse" */
+}
+
+
+/* ════════════════════════════════════════════════════════
+   MULTIMEDIA
+   ════════════════════════════════════════════════════════ */
+.multimedia {
+  padding-bottom: 4rem;
+}
+
+.contenedor-multimedia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.tarjetamtd {
+  position: relative;
+  /* relative: el elemento mantiene su lugar en el flujo,
+     pero permite que hijos con position: absolute
+     se posicionen relativo a él (no al body) */
+  overflow: hidden;        /* recorta el zoom de la foto */
+  width: 80vw;
+  margin-top: 5rem;
+  border-radius: var(--radius);
+}
+
+.photo {
+  width: 100%;
+  height: auto;            /* mantiene la proporción original de la imagen */
+  display: block;          /* elimina el espacio inferior de las imágenes inline */
+  transition: transform .55s cubic-bezier(.25, .46, .45, .94);
+  /* cubic-bezier: curva de animación personalizada (más natural que ease) */
+}
+
+.tarjetamtd:hover .photo {
+  transform: scale(1.04);
+}
+
+.photo-overlay {
+  position: absolute;
+  /* absolute: sale del flujo, se posiciona relativo
+     al padre con position: relative */
+  inset: 0;
+  /* inset: shorthand para top/right/bottom/left: 0
+     Hace que el overlay cubra toda la tarjeta */
+  background: linear-gradient(to top, rgba(24, 20, 14, .75) 0%, transparent 55%);
+  opacity: 0;              /* invisible por defecto */
+  transition: opacity .3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* texto al fondo del overlay */
+  padding: 1.25rem;
+}
+
+.tarjetamtd:hover .photo-overlay {
+  opacity: 1;              /* aparece al hover del padre */
+}
+
+.item-title {
+  font-family: 'Crimson Pro', serif;
+  font-size: clamp(1rem, 2vw, 2rem);
+  font-weight: 300;        /* thin: más delgado que regular (400) */
+  color: white;
+  transform: translateY(8px); /* empieza 8px abajo */
+  transition: transform .3s ease;
+}
+
+.tarjetamtd:hover .item-title,
+.tarjetamtd:hover .item-meta {
+  transform: translateY(0); /* sube a posición original */
+}
+
+.item-title:hover {
+  color: var(--accent);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   CARRUSEL
+   ════════════════════════════════════════════════════════ */
+.carrusel {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  height: 600px;
+  overflow-y: hidden;      /* oculta scroll vertical */
+  overflow-x: auto;        /* permite scroll horizontal */
+  scroll-behavior: smooth; /* anima el scroll al llamar scrollBy() desde JS */
+  padding-block: 8px;      /* padding-block = padding-top + padding-bottom */
+}
+
+.carrusel::-webkit-scrollbar {
+  height: 8px;             /* grosor del scrollbar horizontal */
+}
+
+.carrusel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.carrusel::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box; /* el bg no pinta el área del border */
+}
+
+.carrusel::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
+
+.carrusel-arrow {
+  position: absolute;
+  z-index: 2;
+  border-radius: 100%;     /* círculo perfecto */
+  border: 1px solid #1b1b1b;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  background-color: #3333337d; /* los últimos 2 hex son la opacidad */
+  color: white;
+  top: 40%;
+}
+
+.carrusel-arrow:hover {
+  background-color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.carrusel-arrow-left {
+  margin-left: 8px;
+}
+
+.carrusel-arrow-right {
+  right: 0;
+  margin-right: 8px;
+}
+
+.cardcarrusel {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
+  /* aspect-ratio: mantiene proporción ancho/alto.
+     1/1 = cuadrado. 16/9 = widescreen. */
+  background-color: var(--border);
+  flex-shrink: 0;          /* impide que flex comprima las tarjetas */
+  overflow: hidden;
+}
+
+.foto-carrusel {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  display: block;
+  transition: transform .55s cubic-bezier(.25, .46, .45, .94);
+}
+
+.cardcarrusel:hover .foto-carrusel {
+  transform: scale(1.04);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   MEDIA QUERIES
+
+   Aplican estilos condicionalmente según el tamaño
+   de la pantalla.
+
+   max-width: activa en pantallas MENORES O IGUALES al valor.
+   min-width: activa en pantallas MAYORES O IGUALES al valor.
+
+   El CSS base está pensado para desktop.
+   Las media queries sobreescriben para pantallas menores.
+   ════════════════════════════════════════════════════════ */
+
+/* ─── MÓVIL PEQUEÑO ≤ 480px ──────────────────────────── */
+@media (max-width: 480px) {
+
+  body {
+    padding: 12px;
+    padding-top: 70px;
+  }
+
+  .principal {
+    flex-direction: column; /* imagen y texto apilados */
+    min-height: auto;
+    gap: 0;
+  }
+
+  .fotoprincipal {
+    width: 100vw;
+    min-height: 55vw;
+    margin-left: -12px;    /* cancela el padding del body */
+    order: -1;
+    /* order: controla el orden visual de los hijos flex.
+       -1 hace que aparezca primero, antes del texto */
+  }
+
+  .textoprincipal {
+    max-width: 100%;
+    padding: 1.5rem 0.5rem;
+  }
+
+  .introtitle {
+    font-size: clamp(1.8rem, 9vw, 2.5rem);
+  }
+
+  .btn {
+    display: block;        /* botones en columna */
+    margin-right: 0;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .horario-tarjetas {
+    grid-template-columns: 1fr; /* 1 columna */
+  }
+
+  .tarjeta {
+    height: 320px;
+  }
+
+  .tarjetamtd {
+    width: 95vw;
+    margin-top: 2rem;
+  }
+
+  .cardcarrusel {
+    max-width: 260px;
+  }
+
+  .carrusel {
+    height: 340px;
+  }
+
+  footer {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "contact"
+      "links";
+    gap: 1.5rem;
+  }
+
+  .links {
+    align-items: flex-start;
+  }
+
+  /* ── Tabla responsive ───────────────────────────────── */
+  /* Convierte filas de tabla en bloques apilados */
+  table, thead, tbody, tr, th, td {
+    display: block;
+  }
+
+  thead {
+    display: none; /* los headers se muestran con data-label en ::before */
+  }
+
+  tr {
+    background-color: #1b1b1b;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    padding: 12px;
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between; /* etiqueta izquierda, valor derecha */
+    border-bottom: 1px solid #2a2a2a;
+    padding: 10px 8px;
+    font-size: 0.9rem;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  /* ::before: pseudo-elemento que inserta contenido ANTES del elemento.
+     attr(data-label): lee el atributo data-label del HTML y lo muestra */
+  td::before {
+    content: attr(data-label);
+    color: var(--primary-light);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    margin-right: 1rem;
+  }
+
+}
+
+/* ─── MÓVIL GRANDE / TABLET CHICA: 481px–767px ──────── */
+@media (min-width: 481px) and (max-width: 767px) {
+
+  .principal {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .fotoprincipal {
+    width: 100vw;
+    min-height: 50vw;
+    margin-left: -20px;
+    order: -1;
+  }
+
+  .textoprincipal {
+    max-width: 100%;
+    padding: 2rem 1rem;
+  }
+
+  .introtitle {
+    font-size: clamp(2rem, 7vw, 3rem);
+  }
+
+  .horario-tarjetas {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  }
+
+  .tarjeta {
+    height: 340px;
+  }
+
+  .tarjetamtd {
+    width: 90vw;
+  }
+
+  .cardcarrusel {
+    max-width: 300px;
+  }
+
+  .carrusel {
+    height: 420px;
+  }
+
+  footer {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "contact"
+      "links";
+    gap: 1.5rem;
+  }
+
+  .links {
+    align-items: flex-start;
+  }
+
+}
+
+/* ─── TABLET: 768px–1023px ───────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  .principal {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .fotoprincipal {
+    width: 100vw;
+    min-height: 45vw;
+    margin-left: -20px;
+    order: -1;
+  }
+
+  .textoprincipal {
+    max-width: 100%;
+    padding: 2rem;
+  }
+
+  .introtitle {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .horario-tarjetas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tarjetamtd {
+    width: 85vw;
+  }
+
+  .cardcarrusel {
+    max-width: 340px;
+  }
+
+  .carrusel {
+    height: 480px;
+  }
+
+}
+
+/* ─── DESKTOP: ≥ 1024px ──────────────────────────────── */
+@media (min-width: 1024px) {
+
+  .principal {
+    flex-direction: row;   /* vuelve a fila: texto | imagen */
+    min-height: 100vh;
+  }
+
+  .fotoprincipal {
+    width: 50vw;
+    min-height: 100vh;
+    margin-left: 0;
+    order: 0;              /* orden por defecto */
+  }
+
+  .textoprincipal {
+    max-width: 600px;
+    padding: 2rem;
+  }
+
+  .horario-tarjetas {
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  }
+
+  .tarjeta {
+    height: 380px;
+  }
+
+  .tarjetamtd {
+    width: 80vw;
+  }
+
+  .cardcarrusel {
+    max-width: 400px;
+  }
+
+  .carrusel {
+    height: 600px;
+  }
+
+}
+
+/* ─── DESKTOP GRANDE: ≥ 1440px ───────────────────────── */
+@media (min-width: 1440px) {
+
+  .textoprincipal {
+    padding-left: 4rem;
+  }
+
+  .introtitle {
+    font-size: 4rem;
+  }
+
+  .horario-tarjetas {
+    gap: 32px;
+  }
+
+  .tarjetamtd {
+    width: 70vw;
+  }
+
+}
+
+/* ─── ACCESIBILIDAD: REDUCED MOTION ─────────────────── */
+/* Se activa cuando el usuario tiene "reducir movimiento"
+   en las preferencias de su sistema operativo */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;   /* !important sobreescribe cualquier otro estilo */
+    transition: none !important;
+  }
+}
